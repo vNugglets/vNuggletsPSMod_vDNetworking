@@ -16,14 +16,14 @@ begin {
 		Copyright = "MIT License"
 		Description = "Module with functions for managing VMware vSphere Virtual Distributed Networking components like traffic filtering and marking"
 		# AliasesToExport = @()
-		FileList = Write-Output "${strModuleName}.psd1" "en-US\about_${strModuleName}.help.txt"
+		FileList = Write-Output "${strModuleName}.psd1" "${strModuleName}_ModRoot.psm1" "en-US\about_${strModuleName}.help.txt" GetItems.ps1 NewItems.ps1
 		FunctionsToExport = Write-Output Get-VNVDTrafficFilterPolicyConfig Get-VNVDTrafficRule Get-VNVDTrafficRuleQualifier New-VNVDNetworkRuleQualifier
 		IconUri = "https://avatars0.githubusercontent.com/u/10615837"
 		LicenseUri = "https://github.com/vNugglets/vNuggletsPSMod_vDNetworking/blob/master/License"
-		# NestedModules = Write-Output "${strModuleName}_supportingFunctions.ps1"
+		NestedModules = Write-Output GetItems.ps1 NewItems.ps1
 		ProjectUri = "https://github.com/vNugglets/vNuggletsPSMod_vDNetworking"
 		ReleaseNotes = "See release notes at https://github.com/vNugglets/vNuggletsPSMod_vDNetworking/blob/master/ChangeLog.md"
-		# RootModule = "${strModuleName}Mod_functions.psm1"
+		RootModule = "${strModuleName}_ModRoot.psm1"
 		Tags = Write-Output vNugglets VMware vSphere PowerCLI VDPortGroup TrafficFiltering Filter Filtering TrafficMarking Mark Marking VDSwitch
 		# Verbose = $true
 	} ## end hashtable

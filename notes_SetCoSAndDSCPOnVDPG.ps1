@@ -99,3 +99,84 @@ foreach($pg in (Get-View -Id  $dvSw.ExtensionData.Portgroup | Where {$dvPgNames 
     $pg.ReconfigureDVPortgroup($spec)
 }
 #>
+
+
+  ## get VDTrafficFilterPolicyConfig:
+  #$viewVDPG.Config.DefaultPortConfig.FilterPolicy.FilterConfig
+  ## can get:
+  # VDTrafficFilterPolicyConfig:  Key, Enabled, Precedence, Key, AgentName, SlotNumber, Parameters, OnFailure, Inherited
+  # --> VDTrafficFilterPolicyConfig.VDTrafficRule: Key, Description, Sequence, Qualifier, Action, Direction
+  # --> VDTrafficFilterPolicyConfig.VDTrafficRule.VDTrafficRuleQualifier:  VMware.Vim.DvsSystemTrafficNetworkRuleQualifier or VMware.Vim.DvsIpNetworkRuleQualifier or one other
+  <#
+  {
+  "FilterConfig":  [
+         {
+         "TrafficRuleset":  {
+              "Key":  "51_255_ _13461229",
+              "Enabled":  true,
+              "Precedence":  null,
+              "Rules":  [
+                  {
+                    "Key":  "51_255_ _13461229_71622573",
+                    "Description":  "test VSAN rule0",
+                    "Sequence":  10,
+                    "Qualifier":  [
+                        {
+                        "TypeOfSystemTraffic":  {
+                                "Value":  "vsan",
+                                "Negate":  false
+                              },
+                        "Key":  "51_255_ _13461229_71622573_99129637"
+                        }
+                      ],
+                    "Action":  {
+                       "QosTag":  null,
+                       "DscpTag":  25
+                       },
+                    "Direction":  "incomingPackets"
+                  },
+                  {
+                    "Key":  "51_255_ _13461229_16439589",
+                    "Description":  "test BUR rule",
+                    "Sequence":  20,
+                    "Qualifier":  [
+                        {
+                        "SourceAddress":  {
+                              "AddressPrefix":  "255.255.255.255",
+                              "PrefixLength":  0,
+                              "Negate":  null
+                              },
+                        "DestinationAddress":  {
+                                 "AddressPrefix":  "10.5.64.0",
+                                 "PrefixLength":  20,
+                                 "Negate":  false
+                               },
+                        "Protocol":  {
+                             "Value":  6,
+                             "Negate":  false
+                             },
+                        "SourceIpPort":  null,
+                        "DestinationIpPort":  null,
+                        "TcpFlags":  null,
+                        "Key":  "51_255_ _13461229_16439589_25543994"
+                        }
+                      ],
+                    "Action":  {
+                       "QosTag":  null,
+                       "DscpTag":  8
+                       },
+                    "Direction":  "incomingPackets"
+                  }
+                  ]
+              },
+         "Key":  "51_255_ _91108317",
+         "AgentName":  "dvfilter-generic-vmware",
+         "SlotNumber":  null,
+         "Parameters":  null,
+         "OnFailure":  null,
+         "Inherited":  false
+         }
+       ],
+  "Inherited":  false
+  }
+#>
