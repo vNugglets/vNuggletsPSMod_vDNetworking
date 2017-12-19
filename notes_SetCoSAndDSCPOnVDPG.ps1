@@ -6,14 +6,11 @@ Action
 [switch]Enabled = $true
 [int]CoSValue -- nullable
 [int]DSCPValue -- nullable
-[ValidateSet("incomingPackets","outgoingPackets","both")][string]TrafficDirection
+[ValidateSet("incomingPackets","outgoingPackets","both")][VMware.Vim.DvsNetworkRuleDirectionType]TrafficDirection
 [VMware.Vim.DvsNetworkRuleQualifier[]]RuleQualifier
 
 
-New-NetworkRuleQualifier.ps1
-Get-VDTrafficFilterPolicyConfig.ps1
-Get-VDTrafficRule.ps1
-Get-VDTrafficRuleQualifier.ps1
+New-NetworkRuleQualifier.ps1, Get-VDTrafficFilterPolicyConfig.ps1, Get-VDTrafficRule.ps1, Get-VDTrafficRuleQualifier.ps1
 
 ## something like
 # get-vdpg | get-vdtrafficfilter | new-vdtrafficrule

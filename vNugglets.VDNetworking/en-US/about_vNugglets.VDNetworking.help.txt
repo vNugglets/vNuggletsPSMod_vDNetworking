@@ -1,0 +1,29 @@
+TOPIC
+    about_vNugglets.VDNetworking
+
+SHORT DESCRIPTION
+    Module encapsulating vNugglets.com functions for VMware vSphere Virtual
+    Distributed networking components
+
+LONG DESCRIPTION
+    The cmdlets in this module focus  on VMware vSphere Virtual Distributed
+    networking infrastructure.  Mainly this is about traffic filtering rules
+    and traffic marking configurations for vDPortgroups
+
+EXAMPLES
+    All of the cmdlets in this module have proper comment-based help.  Discover
+    and learn via the standard PowerShell way:
+
+        Get-Help -Full <cmdlet-name>
+
+KEYWORDS
+    vNugglets
+    vNuggs
+    vNuggies
+    vNooget
+    vNoogets
+    vNooglets
+
+SEE ALSO
+    vNugglets.com
+    github.com/vNugglets
