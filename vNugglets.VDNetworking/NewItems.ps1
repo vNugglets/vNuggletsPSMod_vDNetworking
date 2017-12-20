@@ -291,3 +291,65 @@ function New-VNVDTrafficRuleAction {
 		} ## end switch
 	} ## end process
 } ## end function
+
+
+
+function New-VNVDTrafficRule {
+<#	.Description
+	Make new Traffic Rule, for use in creating vDPortgroup traffic filter policy
+
+	.Example
+	New-VNVDTrafficRule -Name "Allow vMotion from source network" -Action (New-VNVDTrafficRuleAction -Allow) -Qualifier (New-VNVDNetworkRuleQualifier -SystemTrafficType vMotion), (New-VNVDNetworkRuleQualifier -SourceIpAddress 10.0.0.0/8)
+	Create a new Traffic Rule that has two Qualifiers. The new Traffic Rule allows vMotion traffic from given source network
+
+	.Example
+	New-VNVDTrafficRule -Name "Apply DSCP tag to VM traffic from given address" -Action (New-VNVDTrafficRuleAction -DscpTag 8) -Qualifier (New-VNVDNetworkRuleQualifier -SystemTrafficType virtualMachine), (New-VNVDNetworkRuleQualifier -SourceIpAddress 172.16.1.2) -Direction outgoingPackets
+	Create a new Traffic Rule that has two Qualifiers. The new Traffic Rule adds a DSCP tag with value 8 to VM traffic from given source IP
+
+	.Outputs
+	VMware.Vim.DvsTrafficRule
+#>
+	[CmdletBinding()]
+	[OutputType([VMware.Vim.DvsTrafficRule])]
+	param(
+		## Name/description of the new rule
+		[parameter(Mandatory=$true)][String]$Name,
+
+		## Action to be applied for this rule. Can use New-VNVDTrafficRuleAction to create a new Action object to use for this parameter
+		[parameter(Mandatory=$true)][VMware.Vim.DvsNetworkRuleAction]$Action,
+
+		## The direction of the packets to which to apply this rule (incoming packets, outgoing packets, or both). Defaults to "both" if not specified. Current valid values are IncomingPackets, OutgoingPackets, or Both. See VMware.Vim.DvsNetworkRuleDirectionType enumeration for these valid values (like:  [System.Enum]::GetNames([VMware.Vim.DvsNetworkRuleDirectionType]))
+		[VMware.Vim.DvsNetworkRuleDirectionType]$Direction = "Both",
+
+		## One or more Rule Qualifiers to use in this rule. Can use New-VNVDNetworkRuleQualifier to create new Rule Qualifier to use as values for this parameter. More info from VMware API documentation:
+		#
+		# "List of Network rule qualifiers. 'AND' of this array of network rule qualifiers is applied as one network traffic rule. For TrafficRule belonging to DvsFilterPolicy: There can be a maximum of 1 DvsIpNetworkRuleQualifier, 1 DvsMacNetworkRuleQualifier and 1 DvsSystemTrafficNetworkRuleQualifier for a total of 3 qualifiers"
+		[parameter(Mandatory=$true)][VMware.Vim.DvsNetworkRuleQualifier[]]$Qualifier,
+
+		## Order in which to place this rule in a rule set.  "Sequence of this rule".
+		[Int]$Sequence
+	) ## end param
+
+	begin {
+		## mapping of function parameter name to new-object property name, to use in creating new object more efficiently (by iterating over the parameters passed to the function)
+		$hshParameterNameToNewObjectPropertyNameMapping = @{
+			Action = "action"
+			Name = "description"
+			Qualifier = "qualifier"
+			Sequence = "sequence"
+		} ## end hsh
+	} ## end begin
+
+	process {
+		## always add Direction key/value is in the hsh (so that, if not specified by user, it takes default value)
+		$hshParamForNewRuleObject = @{direction = $Direction}
+
+		## for any of the other bound parameters that are for specific properties of a new Traffic Rule (i.e., that are not "common" PowerShell parameters like -Verbose or -PipelineVariable)
+		$PSBoundParameters.Keys | Where-Object {$hshParameterNameToNewObjectPropertyNameMapping.ContainsKey($_)} | Foreach-Object {
+			## get the new API object property name to use from the NameMapping hashtable, and set the value to that of the given bound parameter
+			$hshParamForNewRuleObject[$hshParameterNameToNewObjectPropertyNameMapping[$_]] = $PSBoundParameters[$_]
+		} ## end foreach-object
+
+		New-Object -TypeName VMware.Vim.DvsTrafficRule -Property $hshParamForNewRuleObject
+	} ## end process
+} ## end function

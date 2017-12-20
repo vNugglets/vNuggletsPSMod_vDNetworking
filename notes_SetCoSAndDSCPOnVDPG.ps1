@@ -16,17 +16,15 @@ Get-VNVDTrafficRuleAction
 New-VNVDTrafficFilterPolicy
 New-VNVDTrafficRuleSet
 
-New-VNVDTrafficRule
-
 Done (to at least some extent -- some may have further features to implement):
 Get-VNVDTrafficFilterPolicyConfig
 Get-VNVDTrafficRule
 Get-VNVDTrafficRuleQualifier
-
 New-VNVDNetworkRuleQualifier
 New-VNVDTrafficRuleAction
     remaining Action types to implement: DvsCopyNetworkRuleAction, DvsGreEncapNetworkRuleAction, DvsLogNetworkRuleAction, DvsMacRewriteNetworkRuleAction, DvsPuntNetworkRuleAction, DvsRateLimitNetworkRuleAction
-
+New-VNVDTrafficRule
+    - may need to add logic to ensure it meets requirement stated in API ref of, "There can be a maximum of 1 DvsIpNetworkRuleQualifier, 1 DvsMacNetworkRuleQualifier and 1 DvsSystemTrafficNetworkRuleQualifier for a total of 3 qualifiers"
 
 ## something like
 #  gets
