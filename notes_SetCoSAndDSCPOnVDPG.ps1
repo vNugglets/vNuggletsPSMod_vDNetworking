@@ -11,9 +11,12 @@ RuleAction
 
 
 Need:
-Add-VNVDTrafficRuleSetRule -Rule
-Remove-VNVDTrafficRuleSetRule -Rule
+Add-VNVDTrafficRuleSetRule -Rule -RunAsync
+    -ruleset should have property of "parent vDPG", to be used for vDPG reconfig task (need to add vDPG property to return from Get-VNVDTrafficRuleSet, Get-VNVDTrafficRule, and Get-VNVDTrafficFilterPolicyConfig)
+Remove-VNVDTrafficRuleSetRule -Rule -RunAsync
+    -ruleset should have property of "parent vDPG", to be used for vDPG reconfig task (need to add vDPG property to return from Get-VNVDTrafficRuleSet, Get-VNVDTrafficRule, and Get-VNVDTrafficFilterPolicyConfig)
 Set-VNVDTrafficRuleSet -Enabled -Rule -Precedence
+    -ruleset should have property of "parent vDPG", to be used for vDPG reconfig task (need to add vDPG property to return from Get-VNVDTrafficRuleSet, Get-VNVDTrafficRule, and Get-VNVDTrafficFilterPolicyConfig)
 Get-VNVDTrafficRuleAction
 
 Maybe eventually add:
