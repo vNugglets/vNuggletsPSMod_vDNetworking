@@ -2,7 +2,7 @@
 ## params to take for new FilterPolicy
 vDPG
 Name
-Action
+RuleAction
 [switch]Enabled = $true
 [int]CoSValue -- nullable
 [int]DSCPValue -- nullable
@@ -10,11 +10,35 @@ Action
 [VMware.Vim.DvsNetworkRuleQualifier[]]RuleQualifier
 
 
-New-NetworkRuleQualifier.ps1, Get-VDTrafficFilterPolicyConfig.ps1, Get-VDTrafficRule.ps1, Get-VDTrafficRuleQualifier.ps1
+Need:
+Get-VNVDTrafficRuleSet
+Get-VNVDTrafficRuleAction
+New-VNVDTrafficFilterPolicy
+New-VNVDTrafficRuleSet
+
+New-VNVDTrafficRule
+
+Done (to at least some extent -- some may have further features to implement):
+Get-VNVDTrafficFilterPolicyConfig
+Get-VNVDTrafficRule
+Get-VNVDTrafficRuleQualifier
+
+New-VNVDNetworkRuleQualifier
+New-VNVDTrafficRuleAction
+    remaining Action types to implement: DvsCopyNetworkRuleAction, DvsGreEncapNetworkRuleAction, DvsLogNetworkRuleAction, DvsMacRewriteNetworkRuleAction, DvsPuntNetworkRuleAction, DvsRateLimitNetworkRuleAction
+
 
 ## something like
+#  gets
 # get-vdpg | get-vdtrafficfilter | new-vdtrafficrule
 # get-vdpg | get-vdtrafficfilter | get-vdtrafficrule
+#  new
+# $oTraffQualifier0 = New-VNVDNetworkRuleQualifier -ParmsHere
+# $oTraffQualifier1 = New-VNVDNetworkRuleQualifier -ParmsHere
+# $oTraffRule = New-VNVDTrafficRule -Direction blahh -Qualifier $oTraffQualifier0, $oTraffQualifier1
+# get-vdpg someVdpg | New-VNVDTrafficPolicy -Enabled -Rule $oTraffRule
+# or
+# get-vdpg someVdpg | New-VNVDTrafficPolicy -Enabled -Rule (New-VNVDTrafficRule -Direction blahh -Qualifier (New-VNVDNetworkRuleQualifier -ParmsHere))
 
 
 <# couple of examples
@@ -24,7 +48,6 @@ $dvPgNames = 'dvPg1'
 
 $dvSw = Get-VDSwitch -Name $dvSwName
 
-# Enable LBT
 foreach($pg in (Get-View -Id  $dvSw.ExtensionData.Portgroup | Where {$dvPgNames -contains $_.Name})){
     $spec = New-Object VMware.Vim.DVPortgroupConfigSpec
     $spec.ConfigVersion = $pg.Config.ConfigVersion

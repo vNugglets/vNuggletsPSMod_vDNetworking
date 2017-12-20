@@ -1,5 +1,5 @@
 <#	.Description
-	Some code to help automate the updating of the ModuleManifest file
+	Some code to help automate the updating of the ModuleManifest file (will create it if it does not yet exist, too)
 #>
 [CmdletBinding(SupportsShouldProcess=$true)]
 param()
@@ -17,7 +17,7 @@ begin {
 		Description = "Module with functions for managing VMware vSphere Virtual Distributed Networking components like traffic filtering and marking"
 		# AliasesToExport = @()
 		FileList = Write-Output "${strModuleName}.psd1" "${strModuleName}_ModRoot.psm1" "en-US\about_${strModuleName}.help.txt" GetItems.ps1 NewItems.ps1
-		FunctionsToExport = Write-Output Get-VNVDTrafficFilterPolicyConfig Get-VNVDTrafficRule Get-VNVDTrafficRuleQualifier New-VNVDNetworkRuleQualifier
+		FunctionsToExport = Write-Output Get-VNVDTrafficFilterPolicyConfig Get-VNVDTrafficRule Get-VNVDTrafficRuleQualifier New-VNVDNetworkRuleQualifier New-VNVDTrafficRuleAction
 		IconUri = "https://avatars0.githubusercontent.com/u/10615837"
 		LicenseUri = "https://github.com/vNugglets/vNuggletsPSMod_vDNetworking/blob/master/License"
 		NestedModules = Write-Output GetItems.ps1 NewItems.ps1
@@ -30,9 +30,11 @@ begin {
 } ## end begin
 
 process {
-	if ($PsCmdlet.ShouldProcess($strFilespecForPsd1, "Update module manifest")) {
-		## do the actual module manifest update
-		PowerShellGet\Update-ModuleManifest @hshModManifestParams
+	$bManifestFileAlreadyExists = Test-Path $strFilespecForPsd1
+	$strMsgForShouldProcess = "{0} module manifest" -f $(if (-not $bManifestFileAlreadyExists) {"Create"} else {"Update"})
+	if ($PsCmdlet.ShouldProcess($strFilespecForPsd1, $strMsgForShouldProcess)) {
+		## do the actual module manifest creation/update
+		if (-not ($bManifestFileAlreadyExists)) {Microsoft.PowerShell.Core\New-ModuleManifest @hshModManifestParams} else {PowerShellGet\Update-ModuleManifest @hshModManifestParams}
 		## replace the comment in the resulting module manifest that includes "PSGet_" prefixed to the actual module name with a line without "PSGet_" in it
 		(Get-Content -Path $strFilespecForPsd1 -Raw).Replace("# Module manifest for module 'PSGet_$strModuleName'", "# Module manifest for module '$strModuleName'") | Set-Content -Path $strFilespecForPsd1
 	} ## end if

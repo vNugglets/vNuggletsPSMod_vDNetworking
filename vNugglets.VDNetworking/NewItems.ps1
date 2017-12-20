@@ -59,13 +59,13 @@ function New-VNVDNetworkRuleQualifier {
 		[parameter(ParameterSetName="IpNetworkRuleQualifier")][Switch]$NegateProtocol,
 
 		## IP Port of the traffic source, either a single IP port, or a range of IP ports. Examples:  "443" or "80-1024"
-		[parameter(ParameterSetName="IpNetworkRuleQualifier")][ValidateScript({($_ -match "^\d+(-\d+)?$")})][String]$SourceIpPort,
+		[parameter(ParameterSetName="IpNetworkRuleQualifier")][ValidatePattern("^\d+(-\d+)?$")][String]$SourceIpPort,
 
 		## Switch:  negate the source IP port?  If $true, then this has the effect of "not source IP port", like "not traffic from port 443"
 		[parameter(ParameterSetName="IpNetworkRuleQualifier")][Switch]$NegateSourceIpPort,
 
 		## IP Port of the traffic destination, either a single IP port, or a range of IP ports. Examples:  "443" or "80-1024"
-		[parameter(ParameterSetName="IpNetworkRuleQualifier")][ValidateScript({($_ -match "^\d+(-\d+)?$")})][String]$DestinationIpPort,
+		[parameter(ParameterSetName="IpNetworkRuleQualifier")][ValidatePattern("^\d+(-\d+)?$")][String]$DestinationIpPort,
 
 		## Switch:  negate the destination IP port?  If $true, then this has the effect of "not destination IP port", like "not traffic to port 443"
 		[parameter(ParameterSetName="IpNetworkRuleQualifier")][Switch]$NegateDestinationIpPort,
@@ -234,6 +234,59 @@ function New-VNVDNetworkRuleQualifier {
 				if ($PSBoundParameters.ContainsKey("VlanId")) {$hshPropertiesForNewDvsMacNetworkRuleQualifier["vlanId"] = New-Object -Type VMware.Vim.IntExpression -Property @{Value = $VlanId; Negate = $NegateVlanId}}
 
 				New-Object -TypeName VMware.Vim.DvsMacNetworkRuleQualifier -Property $hshPropertiesForNewDvsMacNetworkRuleQualifier
+			} ## end case
+		} ## end switch
+	} ## end process
+} ## end function
+
+
+
+function New-VNVDTrafficRuleAction {
+<#	.Description
+	Make new VMware.Vim.DvsNetworkRuleAction, for use in creating vDPortgroup traffic filter policy rule.  Currently supports creating Rule Actions of types DvsAcceptNetworkRuleAction ("Allow"), DvsDropNetworkRuleAction, and DvsUpdateTagNetworkRuleAction
+
+	.Example
+	New-VNVDTrafficRuleAction -Allow
+	Create a new DvsAcceptNetworkRuleAction object that will specify an action of "Allow packet"
+
+	.Example
+	New-VNVDTrafficRuleAction -Drop
+	Create a new DvsDropNetworkRuleAction object that will specify an action of "Drop packet"
+
+	.Example
+	New-VNVDTrafficRuleAction -DscpTag 8 -QosTag 0
+	Create a new DvsUpdateTagNetworkRuleAction object that will specify an action of "tag with DSCP value of 8, and clear the QoS tag of packet"
+
+	.Outputs
+	VMware.Vim.DvsNetworkRuleAction
+#>
+	[OutputType([VMware.Vim.DvsNetworkRuleAction])]
+	param (
+		## Make an Accept ("Allow") rule action?
+		[parameter(ParameterSetName="DvsAcceptNetworkRuleAction")][Switch]$Allow,
+
+		## Make an Accept ("Allow") rule action?
+		[parameter(ParameterSetName="DvsDropNetworkRuleAction")][Switch]$Drop,
+
+		## DSCP tag. From the VMware API documentation: "The valid values for DSCP tag can be found in 'Differentiated Services Field Codepoints' section of IANA website. The information can also be got from reading all of the below RFC: RFC 2474, RFC 2597, RFC 3246, RFC 5865. If the dscpTag is set to 0 then the dscp tag on packets will be cleared."
+		[parameter(ParameterSetName="DvsUpdateTagNetworkRuleAction")][Int]$DscpTag,
+
+		## QoS tag. From the VMware API documentation: "IEEE 802.1p supports 3 bit Priority Code Point (PCP). The valid values are between 0-7. Please refer the IEEE 802.1p documentation for more details about what each value represents. If qosTag is set to 0 then the tag on the packets will be cleared."
+		[parameter(ParameterSetName="DvsUpdateTagNetworkRuleAction")][Int]$QosTag
+	)
+	process {
+		Switch ($PSCmdlet.ParameterSetName) {
+			"DvsAcceptNetworkRuleAction" {New-Object -TypeName VMware.Vim.DvsAcceptNetworkRuleAction; break}
+			"DvsDropNetworkRuleAction" {New-Object -TypeName VMware.Vim.DvsDropNetworkRuleAction; break}
+
+			# DvsUpdateTagNetworkRuleAction, https://vdc-repo.vmware.com/vmwb-repository/dcr-public/98d63b35-d822-47fe-a87a-ddefd469df06/8212891f-77f8-4d27-ab3b-9e2fa52e5355/doc/vim.dvs.TrafficRule.UpdateTagAction.html
+			"DvsUpdateTagNetworkRuleAction" {
+				## hash table to hold the properties for creating a new RuleAction object
+				$hshPropertiesForNewRuleAction = @{}
+				if ($PSBoundParameters.ContainsKey("DscpTag")) {$hshPropertiesForNewRuleAction["dscpTag"] = $DscpTag}
+				if ($PSBoundParameters.ContainsKey("QosTag")) {$hshPropertiesForNewRuleAction["qosTag"] = $QosTag}
+
+				New-Object -TypeName VMware.Vim.DvsUpdateTagNetworkRuleAction -Property $hshPropertiesForNewRuleAction
 			} ## end case
 		} ## end switch
 	} ## end process
