@@ -272,7 +272,7 @@ function New-VNVDTrafficRuleAction {
 		[parameter(ParameterSetName="DvsUpdateTagNetworkRuleAction")][Int]$DscpTag,
 
 		## QoS tag. From the VMware API documentation: "IEEE 802.1p supports 3 bit Priority Code Point (PCP). The valid values are between 0-7. Please refer the IEEE 802.1p documentation for more details about what each value represents. If qosTag is set to 0 then the tag on the packets will be cleared."
-		[parameter(ParameterSetName="DvsUpdateTagNetworkRuleAction")][Int]$QosTag
+		[parameter(ParameterSetName="DvsUpdateTagNetworkRuleAction")][ValidateRange(0,7)][Int]$QosTag
 	)
 	process {
 		Switch ($PSCmdlet.ParameterSetName) {

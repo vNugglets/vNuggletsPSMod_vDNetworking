@@ -3,10 +3,10 @@ TOPIC
 
 SHORT DESCRIPTION
     Module encapsulating vNugglets.com functions for VMware vSphere Virtual
-    Distributed networking components
+    Distributed networking components, like Traffic Filtering and Marking.
 
 LONG DESCRIPTION
-    The cmdlets in this module focus  on VMware vSphere Virtual Distributed
+    The cmdlets in this module focus on VMware vSphere Virtual Distributed
     networking infrastructure.  Mainly this is about traffic filtering rules
     and traffic marking configurations for vDPortgroups
 

@@ -11,13 +11,18 @@ RuleAction
 
 
 Need:
-Get-VNVDTrafficRuleSet
+Add-VNVDTrafficRuleSetRule -Rule
+Remove-VNVDTrafficRuleSetRule -Rule
+Set-VNVDTrafficRuleSet -Enabled -Rule -Precedence
 Get-VNVDTrafficRuleAction
-New-VNVDTrafficFilterPolicy
-New-VNVDTrafficRuleSet
+
+Maybe eventually add:
+Copy-VNVDTrafficRule -Rule -Ruleset rulesettowhichtocopy
+Set-VNVDTrafficRule -- to update a rule, maybe? (like change qualifier/action?)
 
 Done (to at least some extent -- some may have further features to implement):
 Get-VNVDTrafficFilterPolicyConfig
+Get-VNVDTrafficRuleSet (returns VMware.Vim.DvsTrafficRuleset)
 Get-VNVDTrafficRule
 Get-VNVDTrafficRuleQualifier
 New-VNVDNetworkRuleQualifier
@@ -28,15 +33,18 @@ New-VNVDTrafficRule
 
 ## something like
 #  gets
-# get-vdpg | get-vdtrafficfilter | new-vdtrafficrule
-# get-vdpg | get-vdtrafficfilter | get-vdtrafficrule
+# get-vdpg | get-vdtrafficruleset | add-vdtrafficrule
+# get-vdpg | get-vdtrafficruleset | get-vdtrafficrule
 #  new
 # $oTraffQualifier0 = New-VNVDNetworkRuleQualifier -ParmsHere
 # $oTraffQualifier1 = New-VNVDNetworkRuleQualifier -ParmsHere
 # $oTraffRule = New-VNVDTrafficRule -Direction blahh -Qualifier $oTraffQualifier0, $oTraffQualifier1
 # get-vdpg someVdpg | New-VNVDTrafficPolicy -Enabled -Rule $oTraffRule
 # or
-# get-vdpg someVdpg | New-VNVDTrafficPolicy -Enabled -Rule (New-VNVDTrafficRule -Direction blahh -Qualifier (New-VNVDNetworkRuleQualifier -ParmsHere))
+#  overwrite all rules in the ruleset (if any) with new rule(s) specified
+# get-vdpg someVdpg | Get-VNVdpgTrafficRuleSet | Set-VNVdpgTrafficRuleSet -Enabled -Rule (New-VNVDTrafficRule -Direction blahh -Qualifier (New-VNVDNetworkRuleQualifier -ParmsHere))
+#  add traffic rule to traffic ruleset
+# get-vdpg someVdpg | Get-VNVdpgTrafficRuleSet | Add-VNVdpgTrafficRuleSetRule -Rule (New-VNVDTrafficRule -Direction blahh -Qualifier (New-VNVDNetworkRuleQualifier -ParmsHere))
 
 
 <# couple of examples

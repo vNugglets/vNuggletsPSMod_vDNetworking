@@ -21,7 +21,7 @@ begin {
 		# AliasesToExport = @()
 		FileList = Write-Output "${strModuleName}.psd1" "${strModuleName}_ModRoot.psm1" "en-US\about_${strModuleName}.help.txt" GetItems.ps1 NewItems.ps1
 		# FormatsToProcess = "${strModuleName}.format.ps1xml"
-		FunctionsToExport = Write-Output Get-VNVDTrafficFilterPolicyConfig Get-VNVDTrafficRule Get-VNVDTrafficRuleQualifier New-VNVDNetworkRuleQualifier New-VNVDTrafficRuleAction New-VNVDTrafficRule
+		FunctionsToExport = Write-Output Get-VNVDTrafficFilterPolicyConfig Get-VNVDTrafficRuleSet Get-VNVDTrafficRule Get-VNVDTrafficRuleQualifier New-VNVDNetworkRuleQualifier New-VNVDTrafficRuleAction New-VNVDTrafficRule
 		IconUri = "https://avatars0.githubusercontent.com/u/10615837"
 		LicenseUri = "https://github.com/vNugglets/vNuggletsPSMod_vDNetworking/blob/master/License"
 		NestedModules = Write-Output GetItems.ps1 NewItems.ps1
