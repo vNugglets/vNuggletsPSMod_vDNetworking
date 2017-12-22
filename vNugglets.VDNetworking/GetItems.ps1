@@ -73,6 +73,7 @@ function Get-VNVDTrafficRuleSet {
 			{"ByVDPortGroup", "ByVDPortGroupView" -contains $_} {
 				## get the View objects over which to iterate (either the .ExtensionData)
 				$(if ($PSCmdlet.ParameterSetName -eq "ByVDPortGroup") {$VDPortgroup | Foreach-Object {$_.ExtensionData}} else {$VDPortgroupView}) | Foreach-Object {
+					## update the ViewData for this vDPG, just to be sure that all is current
 					$oThisVDPGView = $_; $oThisVDPGView.UpdateViewData("Config")
 					$oThisVDPGView.Config.DefaultPortConfig.FilterPolicy.FilterConfig | Foreach-Object {
 						New-Object -Type VNVDTrafficRuleSet -Property @{
