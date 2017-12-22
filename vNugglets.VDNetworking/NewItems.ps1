@@ -296,21 +296,21 @@ function New-VNVDTrafficRuleAction {
 
 function New-VNVDTrafficRule {
 <#	.Description
-	Make new Traffic Rule, for use in creating vDPortgroup traffic filter policy
+	Make new Traffic Rule and adds its to the given Traffic Ruleset of a vDPortgroup traffic filter policy
 
 	.Example
-	New-VNVDTrafficRule -Name "Allow vMotion from source network" -Action (New-VNVDTrafficRuleAction -Allow) -Qualifier (New-VNVDNetworkRuleQualifier -SystemTrafficType vMotion), (New-VNVDNetworkRuleQualifier -SourceIpAddress 10.0.0.0/8)
-	Create a new Traffic Rule that has two Qualifiers. The new Traffic Rule allows vMotion traffic from given source network
+	Get-VDPortGroup myVDPG0 | Get-VNVDTrafficRuleSet | New-VNVDTrafficRule -Name "Allow vMotion from source network" -Action (New-VNVDTrafficRuleAction -Allow) -Qualifier (New-VNVDNetworkRuleQualifier -SystemTrafficType vMotion), (New-VNVDNetworkRuleQualifier -SourceIpAddress 10.0.0.0/8)
+	Create a new Traffic Rule that has two Qualifiers and add it to the given TrafficRuleset from the given vDPortgroup. The new Traffic Rule allows vMotion traffic from given source network
 
 	.Example
-	New-VNVDTrafficRule -Name "Apply DSCP tag to VM traffic from given address" -Action (New-VNVDTrafficRuleAction -DscpTag 8) -Qualifier (New-VNVDNetworkRuleQualifier -SystemTrafficType virtualMachine), (New-VNVDNetworkRuleQualifier -SourceIpAddress 172.16.1.2) -Direction outgoingPackets
-	Create a new Traffic Rule that has two Qualifiers. The new Traffic Rule adds a DSCP tag with value 8 to VM traffic from given source IP
+	Get-VDPortGroup myVDPG0 | Get-VNVDTrafficRuleSet | New-VNVDTrafficRule -Name "Apply DSCP tag to VM traffic from given address" -Action (New-VNVDTrafficRuleAction -DscpTag 8) -Qualifier (New-VNVDNetworkRuleQualifier -SystemTrafficType virtualMachine), (New-VNVDNetworkRuleQualifier -SourceIpAddress 172.16.1.2) -Direction outgoingPackets -Confirm:$false
+	Create a new Traffic Rule that has two Qualifiers and add it to the given TrafficRuleset from the given vDPortgroup, and do not prompt for confirmation. The new Traffic Rule adds a DSCP tag with value 8 to VM traffic from given source IP
 
 	.Outputs
-	VMware.Vim.DvsTrafficRule
+	VNVDTrafficRule
 #>
-	[CmdletBinding()]
-	[OutputType([VMware.Vim.DvsTrafficRule])]
+	[CmdletBinding(ConfirmImpact = "High", SupportsShouldProcess = $true)]
+	[OutputType([VNVDTrafficRule])]
 	param(
 		## Name/description of the new rule
 		[parameter(Mandatory=$true)][String]$Name,
@@ -327,7 +327,10 @@ function New-VNVDTrafficRule {
 		[parameter(Mandatory=$true)][VMware.Vim.DvsNetworkRuleQualifier[]]$Qualifier,
 
 		## Order in which to place this rule in a rule set.  "Sequence of this rule".
-		[Int]$Sequence
+		[Int]$Sequence,
+
+		## Given vDPortgroup's TrafficRuleset to which to add this new VDTrafficRule
+		[parameter(Mandatory=$true, ValueFromPipeline=$true)][VNVDTrafficRuleSet[]]$TrafficRuleSet
 	) ## end param
 
 	begin {
@@ -350,6 +353,39 @@ function New-VNVDTrafficRule {
 			$hshParamForNewRuleObject[$hshParameterNameToNewObjectPropertyNameMapping[$_]] = $PSBoundParameters[$_]
 		} ## end foreach-object
 
-		New-Object -TypeName VMware.Vim.DvsTrafficRule -Property $hshParamForNewRuleObject
+		$TrafficRuleSet | Foreach-Object {
+			$oThisVNVDTrafficRuleset = $_
+			$oVDPortgroupView_ThisTrafficRuleset = $oThisVNVDTrafficRuleset.VDPortgroupView
+			## update View data, to make sure we have the current info
+			$oVDPortgroupView_ThisTrafficRuleset.UpdateViewData("Config.ConfigVersion","Config.DefaultPortConfig.FilterPolicy.FilterConfig")
+			$strMsgForShouldProcess = "Traffic ruleset '{0}' on vDPG '{1}'" -f $oThisVNVDTrafficRuleset.TrafficRuleset.Key, $oThisVNVDTrafficRuleset.VDPortgroupView.Name
+			if ($PSCmdlet.ShouldProcess($strMsgForShouldProcess, "add traffic rule")) {
+				try {
+					## make a new config spec using values from the existing config of the vDPG
+					$specDVPortgroupConfigSpec = New-Object -Type VMware.Vim.DVPortgroupConfigSpec -Property @{
+					    ConfigVersion = $oVDPortgroupView_ThisTrafficRuleset.Config.ConfigVersion
+					    DefaultPortConfig = New-Object -Type VMware.Vim.VMwareDVSPortSetting -Property @{
+					        FilterPolicy = New-Object -Type VMware.Vim.DvsFilterPolicy -Property @{
+					            FilterConfig = New-Object -Type VMware.Vim.DvsTrafficFilterConfig -Property @{
+					                TrafficRuleset = $oThisVNVDTrafficRuleset.TrafficRuleset
+					                ## use the current FilterConfig value for this property, and not setting the other properties
+					                AgentName = $oVDPortgroupView_ThisTrafficRuleset.Config.DefaultPortConfig.FilterPolicy.FilterConfig.AgentName
+					            } ## end new-object
+					        } ## end new-object
+					    } ## end new-object
+					} ## end new-object
+
+					## add the new TrafficRule to the RuleSet
+					$specDVPortgroupConfigSpec.DefaultPortConfig.FilterPolicy.FilterConfig.TrafficRuleset.Rules += New-Object -TypeName VMware.Vim.DvsTrafficRule -Property $hshParamForNewRuleObject
+
+					## reconfig the VDPortgroup with the config spec
+					$oVDPortgroupView_ThisTrafficRuleset.ReconfigureDVPortgroup($specDVPortgroupConfigSpec)
+
+					## get the current TrafficRuleSet and return it
+					$oVDPortgroupView_ThisTrafficRuleset | Get-VNVDTrafficRuleSet
+				} ## end try
+				catch {Throw $_}
+			} ## end if
+		} ## end foreach-object
 	} ## end process
 } ## end function

@@ -11,28 +11,30 @@ RuleAction
 
 
 Need:
-Add-VNVDTrafficRuleSetRule -Rule -RunAsync
-    -ruleset should have property of "parent vDPG", to be used for vDPG reconfig task (need to add vDPG property to return from Get-VNVDTrafficRuleSet, Get-VNVDTrafficRule, and Get-VNVDTrafficFilterPolicyConfig)
-Remove-VNVDTrafficRuleSetRule -Rule -RunAsync
-    -ruleset should have property of "parent vDPG", to be used for vDPG reconfig task (need to add vDPG property to return from Get-VNVDTrafficRuleSet, Get-VNVDTrafficRule, and Get-VNVDTrafficFilterPolicyConfig)
-Set-VNVDTrafficRuleSet -Enabled -Rule -Precedence
-    -ruleset should have property of "parent vDPG", to be used for vDPG reconfig task (need to add vDPG property to return from Get-VNVDTrafficRuleSet, Get-VNVDTrafficRule, and Get-VNVDTrafficFilterPolicyConfig)
-Get-VNVDTrafficRuleAction
+- Remove-VNVDTrafficRule -Rule -RunAsync
+    - set confirmation level to High
+    - removes a given rule from the ruleset on the given VDPG
+- Set-VNVDTrafficRuleSet -Enabled -Rule -Precedence -VDPortgroup|-TrafficRuleset
+    - set confirmation level to High
+    - enables the overwriting of the rules in the ruleset with jsut the new Rule(s) specified
+- Get-VNVDTrafficRuleAction
+- New-VNVDTrafficRule
+    - may need to add logic to ensure it meets requirement stated in API ref of, "There can be a maximum of 1 DvsIpNetworkRuleQualifier, 1 DvsMacNetworkRuleQualifier and 1 DvsSystemTrafficNetworkRuleQualifier for a total of 3 qualifiers"
+    - add to TrafficRuleset
 
 Maybe eventually add:
 Copy-VNVDTrafficRule -Rule -Ruleset rulesettowhichtocopy
 Set-VNVDTrafficRule -- to update a rule, maybe? (like change qualifier/action?)
 
 Done (to at least some extent -- some may have further features to implement):
-Get-VNVDTrafficFilterPolicyConfig
-Get-VNVDTrafficRuleSet (returns VMware.Vim.DvsTrafficRuleset)
-Get-VNVDTrafficRule
-Get-VNVDTrafficRuleQualifier
-New-VNVDNetworkRuleQualifier
-New-VNVDTrafficRuleAction
-    remaining Action types to implement: DvsCopyNetworkRuleAction, DvsGreEncapNetworkRuleAction, DvsLogNetworkRuleAction, DvsMacRewriteNetworkRuleAction, DvsPuntNetworkRuleAction, DvsRateLimitNetworkRuleAction
-New-VNVDTrafficRule
-    - may need to add logic to ensure it meets requirement stated in API ref of, "There can be a maximum of 1 DvsIpNetworkRuleQualifier, 1 DvsMacNetworkRuleQualifier and 1 DvsSystemTrafficNetworkRuleQualifier for a total of 3 qualifiers"
+- Get-VNVDTrafficFilterPolicyConfig
+- Get-VNVDTrafficRuleSet (returns VNVDTrafficRuleSet object with VDPG property, too)
+- Get-VNVDTrafficRule
+- Get-VNVDTrafficRuleQualifier
+- New-VNVDNetworkRuleQualifier
+- New-VNVDTrafficRuleAction
+    - remaining Action types to implement: DvsCopyNetworkRuleAction, DvsGreEncapNetworkRuleAction, DvsLogNetworkRuleAction, DvsMacRewriteNetworkRuleAction, DvsPuntNetworkRuleAction, DvsRateLimitNetworkRuleAction
+- Ruleset object returned Get-VNVDTrafficRuleSet from  should have property of "parent vDPG", to be used for vDPG reconfig task (need to add vDPG property to return from Get-VNVDTrafficFilterPolicyConfig, Get-VNVDTrafficRuleSet, and Get-VNVDTrafficRule)
 
 ## something like
 #  gets
