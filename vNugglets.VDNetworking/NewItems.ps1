@@ -296,7 +296,7 @@ function New-VNVDTrafficRuleAction {
 
 function New-VNVDTrafficRule {
 <#	.Description
-	Make new Traffic Rule and adds its to the given Traffic Ruleset of a vDPortgroup traffic filter policy
+	Make new Traffic Rule and add it to the given Traffic Ruleset of a vDPortgroup traffic filter policy
 
 	.Example
 	Get-VDPortGroup myVDPG0 | Get-VNVDTrafficRuleSet | New-VNVDTrafficRule -Name "Allow vMotion from source network" -Action (New-VNVDTrafficRuleAction -Allow) -Qualifier (New-VNVDTrafficRuleQualifier -SystemTrafficType vMotion), (New-VNVDTrafficRuleQualifier -SourceIpAddress 10.0.0.0/8)

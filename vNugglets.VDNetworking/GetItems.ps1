@@ -130,9 +130,10 @@ function Get-VNVDTrafficRule {
 			$arrRulesOfInterest | Foreach-Object {
 				$oThisTrafficRule = $_
 				New-Object -Type VNVDTrafficRule -Property @{
-					TrafficRule = $oThisTrafficRule
 					Name = $oThisTrafficRule.Description
+					TrafficRule = $oThisTrafficRule
 					VDPortgroupView = $oThisTrafficRuleset.VDPortgroupView
+					VNVDTrafficRuleSet = $oThisTrafficRuleset
 				} ## end new-object
 			} ## end foreach-object
 		} ## end foreach-object

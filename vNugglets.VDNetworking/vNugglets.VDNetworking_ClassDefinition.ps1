@@ -41,4 +41,7 @@ class VNVDTrafficRule : VNVDBase {
 
 	## the full View object for the vDPG that is the "parent" of this object
 	[VMware.Vim.DistributedVirtualPortgroup]$VDPortgroupView
+
+	## the "parent" VNVDTrafficRuleSet to which this TrafficRule belongs
+	[VNVDTrafficRuleSet]$VNVDTrafficRuleSet
 } ## end class
