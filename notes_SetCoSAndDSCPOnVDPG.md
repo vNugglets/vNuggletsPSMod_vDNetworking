@@ -6,6 +6,7 @@
 - `Set-VNVDTrafficRuleSet -Enabled -Precedence -TrafficRuleset`
     - define cmdlet `ConfirmImpact` to High
 - Examples/docs
+- Tests
 
 ### Maybe eventually add:
 - `Copy-VNVDTrafficRule -Rule -Ruleset <rulesettowhichtocopy>`

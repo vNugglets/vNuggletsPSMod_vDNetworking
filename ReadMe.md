@@ -6,13 +6,15 @@ Contents:
 - [Getting Help](#gettingHelpSection)
 - [ChangeLog](#changelog)
 
-This is a PowerShell module created for providing functionality to automate the management of VMware vSphere virtual distributed networking items for which VMware PowerCLI does not already provide support.  For example, for the reporting on- and creation of traffic filtering and marking at the vDPortgroup level.
+This PowerShell module provides functionality to automate the management of VMware vSphere virtual distributed networking items for which VMware PowerCLI does not already provide support.  For example, for the reporting on-, creation of-, and removal of traffic filtering and marking rules at the vDPortgroup level.
 
 Some of the functionality provided by the cmdlets in this module:
 - Get VDPortgroup traffic policy
 - Get traffic policy rules
 - Get traffic policy rule qualifiers
 - Create traffic policy rule qualifiers, for use in creation of new policy rules
+- Create new traffic rules for the ruleset for the given vDPortgroup
+- Remove given traffic rule(s) from a vDPortgroup
 
 <a id="quickStart"></a>
 ### QuickStart
