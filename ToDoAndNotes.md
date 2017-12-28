@@ -2,7 +2,6 @@
 
 
 ### Need to make:
-- `Get-VNVDTrafficRuleAction`
 - `Set-VNVDTrafficRuleSet -Enabled -Precedence -TrafficRuleset`
     - define cmdlet `ConfirmImpact` to High
 - Examples/docs
@@ -34,6 +33,7 @@ Done (to at least some extent -- some may have further features to implement):
     - implemented, but initially with a bug (now worked around):  cannot rely on TrafficRule object's `Key` property, as that changes with every vDPortgroup reconfig, apparently (so, if iterating through several Rules, after the removal of the 1st one, the keys for the rest in the pipeline are invalid)
         - so, must do the `Process` differently so that all TrafficRule items per vDPortgroup are removed in one reconfig (or, other, less reliable ways, for which I did not opt)
     - Operating with the understanding/observation that there is only ever one (1) `Config.DefaultPortConfig.FilterPolicy.FilterConfig` per vDPortgroup (and, so, one subsequent TrafficRuleset, since a FilterConfig has one TrafficRuleset), even though the `.FilterConfig` property is of type `VMware.Vim.DvsFilterConfig[]`; so, using single TrafficRuleset per group of TrafficRules to remove; may need revisited in the future
+- `Get-VNVDTrafficRuleAction`
 
 ## Get
 `Get-VDPortgroup | Get-VNVDTrafficRuleSet | Get-VNVDTrafficRule`

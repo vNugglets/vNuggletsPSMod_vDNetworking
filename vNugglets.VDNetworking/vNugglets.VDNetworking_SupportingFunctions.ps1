@@ -44,7 +44,8 @@ function _Set-VNVDTrafficRuleset_helper {
 				DefaultPortConfig = New-Object -Type VMware.Vim.VMwareDVSPortSetting -Property @{
 					FilterPolicy = New-Object -Type VMware.Vim.DvsFilterPolicy -Property @{
 						FilterConfig = New-Object -Type VMware.Vim.DvsTrafficFilterConfig -Property @{
-							TrafficRuleset = $oThisVNVDTrafficRuleset.TrafficRuleset
+							## if the current TrafficRuleset property is $null, create a new TrafficRuleset; else, use the existing TrafficRuleset
+							TrafficRuleset = if ($null -eq $oThisVNVDTrafficRuleset.TrafficRuleset) {New-Object -TypeName VMware.Vim.DvsTrafficRuleset} else {$oThisVNVDTrafficRuleset.TrafficRuleset}
 							## use the current FilterConfig value for this property, and not setting the other properties
 							AgentName = $oVDPortgroupView_ThisTrafficRuleset.Config.DefaultPortConfig.FilterPolicy.FilterConfig.AgentName
 						} ## end new-object

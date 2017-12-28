@@ -126,7 +126,7 @@ function Get-VNVDTrafficRule {
 			## if -Name was passed, only return rules whose descriptions are like the given name value(s)
 			if ($PSBoundParameters.ContainsKey("Name")) {$_.TrafficRuleset.Rules | Where-Object {$oThisDescription = $_.Description; ($Name | Foreach-Object {$oThisDescription -like $_}) -contains $true}}
 			elseif ($PSBoundParameters.ContainsKey("LiteralName")) {$_.TrafficRuleset.Rules | Where-Object {$LiteralName -contains $_.Description}}
-			else {$_.TrafficRuleset.Rules}
+			else {$_.TrafficRuleset.Rules | Where-Object {$null -ne $_}}
 			$arrRulesOfInterest | Foreach-Object {
 				$oThisTrafficRule = $_
 				New-Object -Type VNVDTrafficRule -Property @{
@@ -171,6 +171,33 @@ function Get-VNVDTrafficRuleQualifier {
 				if ($strQualifierTypeShortname -eq "DvsSystemTrafficNetworkRuleQualifier") {$arrPropertyForSelectObject += @{n="TypeOfSystemTraffic_Name"; e={$_.TypeOfSystemTraffic.Value}}}
 				$_ | Select-Object -Property $arrPropertyForSelectObject
 			} ## end foreach-object
+		} ## end foreach-object
+	} ## end process
+} ## end function
+
+
+
+function Get-VNVDTrafficRuleAction {
+<#	.Description
+	Function to get the VDTrafficRule Action for the TrafficRule from the given VDTrafficFilterPolicy configuration from VDPortgroup(s).
+
+	.Example
+	Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficFilterPolicyConfig | Get-VNVDTrafficRule | Get-VNVDTrafficRuleAction
+	Get the traffic rules action from the traffic rules from the TrafficeRuleset property of the TrafficFilterPolicyConfig
+
+	.Outputs
+	VMware.Vim.DvsNetworkRuleAction
+#>
+	[CmdletBinding()]
+	[OutputType([VMware.Vim.DvsNetworkRuleAction])]
+	param (
+		## The traffic ruleset rule from the traffic filter policy of the virtual distributed portgroup for which to get the traffic rule action
+		[parameter(Mandatory=$true, ValueFromPipeline=$true, ParameterSetName="ByTrafficRule")][VNVDTrafficRule[]]$TrafficRule
+	) ## end param
+
+	process {
+		$TrafficRule | Foreach-Object {
+			$_.TrafficRule.Action
 		} ## end foreach-object
 	} ## end process
 } ## end function

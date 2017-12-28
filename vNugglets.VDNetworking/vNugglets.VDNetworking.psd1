@@ -74,8 +74,9 @@ NestedModules = @('GetItems.ps1',
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = 'Get-VNVDTrafficFilterPolicyConfig', 'Get-VNVDTrafficRuleSet', 
                'Get-VNVDTrafficRule', 'Get-VNVDTrafficRuleQualifier', 
-               'New-VNVDTrafficRuleQualifier', 'New-VNVDTrafficRuleAction', 
-               'New-VNVDTrafficRule', 'Remove-VNVDTrafficRule'
+               'Get-VNVDTrafficRuleAction', 'New-VNVDTrafficRuleQualifier', 
+               'New-VNVDTrafficRuleAction', 'New-VNVDTrafficRule', 
+               'Remove-VNVDTrafficRule'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
