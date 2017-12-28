@@ -360,7 +360,7 @@ function New-VNVDTrafficRule {
 			if ($PSCmdlet.ShouldProcess($strMsgForShouldProcess, "add traffic rule named '$Name'")) {
 				try {
 					## use the helper function to add this new TrafficRule to the TrafficRuleSet Rules array
-					$oUpdatedTrafficRuleset = _Set-VNVDTrafficRuleset_helper -TrafficRuleSet $oThisVNVDTrafficRuleset -TrafficRule (New-Object -TypeName VMware.Vim.DvsTrafficRule -Property $hshParamForNewRuleObject) -Operation Add
+					$oUpdatedTrafficRuleset = _Set-VNVDTrafficRuleset_helper -TrafficRuleSet $oThisVNVDTrafficRuleset -TrafficRule (New-Object -TypeName VMware.Vim.DvsTrafficRule -Property $hshParamForNewRuleObject) -RuleOperation Add
 					$oUpdatedTrafficRuleset | Get-VNVDTrafficRule -LiteralName $Name
 				} ## end try
 				catch {Throw $_}

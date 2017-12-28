@@ -19,12 +19,12 @@ begin {
 		Copyright = "MIT License"
 		Description = "Module with functions for managing VMware vSphere Virtual Distributed Networking components like traffic filtering and marking"
 		# AliasesToExport = @()
-		FileList = Write-Output "${strModuleName}.psd1" "${strModuleName}_ModRoot.psm1" "en-US\about_${strModuleName}.help.txt" GetItems.ps1 NewItems.ps1 RemoveItems.ps1 "${strModuleName}_SupportingFunctions.ps1" "${strModuleName}.format.ps1xml"
+		FileList = Write-Output "${strModuleName}.psd1" "${strModuleName}_ModRoot.psm1" "en-US\about_${strModuleName}.help.txt" GetItems.ps1 NewItems.ps1 RemoveItems.ps1 SetItems.ps1 "${strModuleName}_SupportingFunctions.ps1" "${strModuleName}.format.ps1xml"
 		FormatsToProcess = "${strModuleName}.format.ps1xml"
-		FunctionsToExport = Write-Output Get-VNVDTrafficFilterPolicyConfig Get-VNVDTrafficRuleSet Get-VNVDTrafficRule Get-VNVDTrafficRuleQualifier Get-VNVDTrafficRuleAction New-VNVDTrafficRuleQualifier New-VNVDTrafficRuleAction New-VNVDTrafficRule Remove-VNVDTrafficRule
+		FunctionsToExport = Write-Output Get-VNVDTrafficFilterPolicyConfig Get-VNVDTrafficRuleSet Get-VNVDTrafficRule Get-VNVDTrafficRuleQualifier Get-VNVDTrafficRuleAction New-VNVDTrafficRuleQualifier New-VNVDTrafficRuleAction New-VNVDTrafficRule Remove-VNVDTrafficRule Set-VNVDTrafficRuleSet
 		IconUri = "https://avatars0.githubusercontent.com/u/10615837"
 		LicenseUri = "https://github.com/vNugglets/vNuggletsPSMod_vDNetworking/blob/master/License"
-		NestedModules = Write-Output GetItems.ps1 NewItems.ps1 RemoveItems.ps1 "${strModuleName}_SupportingFunctions.ps1"
+		NestedModules = Write-Output GetItems.ps1 NewItems.ps1 RemoveItems.ps1 SetItems.ps1 "${strModuleName}_SupportingFunctions.ps1"
 		PowerShellVersion = [System.Version]"5.0"
 		ProjectUri = "https://github.com/vNugglets/vNuggletsPSMod_vDNetworking"
 		ReleaseNotes = "See release notes at https://github.com/vNugglets/vNuggletsPSMod_vDNetworking/blob/master/ChangeLog.md"
@@ -45,4 +45,4 @@ process {
 		## replace the comment in the resulting module manifest that includes "PSGet_" prefixed to the actual module name with a line without "PSGet_" in it
 		(Get-Content -Path $strFilespecForPsd1 -Raw).Replace("# Module manifest for module 'PSGet_$strModuleName'", "# Module manifest for module '$strModuleName'") | Set-Content -Path $strFilespecForPsd1
 	} ## end if
-} ## end prcoess
+} ## end process

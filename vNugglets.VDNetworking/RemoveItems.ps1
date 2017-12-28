@@ -46,7 +46,7 @@ function Remove-VNVDTrafficRule {
 			if ($PSCmdlet.ShouldProcess($strMsgForShouldProcess_Target, $strMsgForShouldProcess_Action)) {
 				try {
 					## use the helper function to remove this TrafficRule from the TrafficRuleSet Rules array
-					$oUpdatedTrafficRuleset = _Set-VNVDTrafficRuleset_helper -TrafficRuleSet $oVNVDTrafficRuleset_TheseRules -TrafficRule $arrDvsTrafficRulesToRemove -Operation Remove
+					$oUpdatedTrafficRuleset = _Set-VNVDTrafficRuleset_helper -TrafficRuleSet $oVNVDTrafficRuleset_TheseRules -TrafficRule $arrDvsTrafficRulesToRemove -RuleOperation Remove
 				} ## end try
 				catch {Throw $_}
 			} ## end if

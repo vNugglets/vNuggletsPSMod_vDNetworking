@@ -100,8 +100,8 @@ function Get-VNVDTrafficRule {
 	Get the traffic rules from the TrafficeRuleset, which was gotten from the vDPG's TrafficFilterPolicyConfig
 
 	.Example
-	Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficFilterPolicyConfig | Get-VNVDTrafficRuleSet | Get-VNVDTrafficRule -Name traffic*
-	Get traffic rules whose name is like "traffic*".
+	Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficFilterPolicyConfig | Get-VNVDTrafficRuleSet | Get-VNVDTrafficRule myTestRule*
+	Get traffic rules whose name is like "myTestRule*".
 
 	.Outputs
 	VNVDTrafficRule with at least properties for VMware.Vim.DvsTrafficRule and VMware.Vim.DistributedVirtualPortgroup for the Traffic rule set rule
@@ -110,13 +110,13 @@ function Get-VNVDTrafficRule {
 	[OutputType([VNVDTrafficRule])]
 	param (
 		## The name(s) of the Traffic Rule(s) to return (accepts wildcards). If -Name or -LiteralName not specified, will return all Traffic Rules for the given traffic rule set
-		[String[]]$Name,
+		[parameter(ParameterSetName="ByName", Position=0)][String[]]$Name,
 
 		## The name(s) of the Traffic Rule(s) to return (exact match only, no wildcarding employed). If -Name or -LiteralName not specified, will return all Traffic Rules for the given traffic rule set
-		[String[]]$LiteralName,
+		[parameter(ParameterSetName="ByLiteralName")][String[]]$LiteralName,
 
 		## The traffic ruleset from the traffic filter policy of the virtual distributed portgroup for which to get the traffic rule(s)
-		[parameter(Mandatory=$true, ValueFromPipeline=$true, ParameterSetName="ByTrafficRuleset")][VNVDTrafficRuleSet[]]$TrafficRuleset
+		[parameter(Mandatory=$true, ValueFromPipeline=$true)][VNVDTrafficRuleSet[]]$TrafficRuleset
 	) ## end param
 
 	process {
