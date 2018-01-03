@@ -8,10 +8,10 @@ function Remove-VNVDTrafficRule {
 
 	.Example
 	Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficRuleSet | Get-VNVDTrafficRule -Name test* | Remove-VNVDTrafficRule
-	Get the TrafficRules named like "test*" from the TrafficRuleSet for the given vDPortGroup and delete them.
+	Get the TrafficRules named like "test*" from the TrafficRuleSet for the given vDPortGroup and delete them
 
 	.Outputs
-	Null. Removes rule(s) as directed, returning nothing upon success.
+	Null. Removes rule(s) as directed, returning nothing upon success
 #>
 	[CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact="High")]
 	param (

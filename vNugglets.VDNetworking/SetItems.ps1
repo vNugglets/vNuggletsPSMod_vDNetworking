@@ -4,11 +4,11 @@ function Set-VNVDTrafficRuleSet {
 
 	.Example
 	Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficFilterPolicyConfig | Get-VNVDTrafficRuleSet | Set-VNVDTrafficRuleSet -Enabled
-	Get the traffic ruleset from the TrafficFilterPolicyConfig object of a given vDPG and Enable it.
+	Get the traffic ruleset from the TrafficFilterPolicyConfig object of a given vDPG and Enable it
 
 	.Example
 	Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficRuleSet | Set-VNVDTrafficRuleSet -Enabled:$false
-	Get the traffic ruleset from the given vDPG and Disable it.
+	Get the traffic ruleset from the given vDPG and Disable it
 
 	.Outputs
 	VNVDTrafficRuleSet with properties with at least VMware.Vim.DvsTrafficRuleset and VMware.Vim.DistributedVirtualPortgroup for the Traffic rule set

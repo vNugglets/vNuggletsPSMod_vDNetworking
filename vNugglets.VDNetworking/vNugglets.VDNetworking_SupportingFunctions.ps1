@@ -31,7 +31,7 @@ function _Set-VNVDTrafficRuleset_helper {
 		## Operation to take on the TrafficRuleSet's Rules array with the given TrafficRule(s). "Add" the rule to the array, "Remove" the rule from the array, or "Overwrite" the array to be just the given rule(s)
 		[parameter(Mandatory=$true, ParameterSetName="ActOnRules")][ValidateSet("Add", "Remove", "Overwrite")][String]$RuleOperation,
 
-		## Switch:  enable the RuleSet? And, -Enabled:$false disables the Ruleset.
+		## Switch:  enable the RuleSet? And, -Enabled:$false disables the Ruleset
 		[Switch]$Enabled
 	) ## end param
 

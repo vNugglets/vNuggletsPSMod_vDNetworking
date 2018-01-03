@@ -1,12 +1,13 @@
 function Get-VNVDTrafficFilterPolicyConfig {
 <#	.Description
-	Function to get the VDTrafficFilterPolicy configuration for the given VDPortgroup(s) from VDSwitch(es).  The VDTrafficFilterPolicy is the item that can be enabled/disabled at the vDPG level.
+	Get the VDTrafficFilterPolicy configuration for the given VDPortgroup(s) from VDSwitch(es)
 
 	.Example
 	Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficFilterPolicyConfig
+	Get the TrafficFilter policy config for the given VDPortgroup
 
 	.Outputs
-	VNVDTrafficFilterPolicyConfig with properties with at least VMware.Vim.DvsTrafficFilterConfig and VMware.Vim.DistributedVirtualPortgroup for the TrafficFilter policy confi
+	VNVDTrafficFilterPolicyConfig with properties with at least VMware.Vim.DvsTrafficFilterConfig and VMware.Vim.DistributedVirtualPortgroup for the TrafficFilter policy config
 #>
 	[CmdletBinding()]
 	[OutputType([VNVDTrafficFilterPolicyConfig])]
@@ -30,7 +31,7 @@ function Get-VNVDTrafficFilterPolicyConfig {
 
 function Get-VNVDTrafficRuleSet {
 <#	.Description
-	Function to get the DvsTrafficRuleset for the given VDTrafficFilterPolicy configuration from VDPortgroup(s), or from VDPortgroup(s) directly.
+	Get the DvsTrafficRuleset for the given VDTrafficFilterPolicy configuration from VDPortgroup(s), or from VDPortgroup(s) directly
 
 	.Example
 	Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficFilterPolicyConfig | Get-VNVDTrafficRuleSet
@@ -93,7 +94,7 @@ function Get-VNVDTrafficRuleSet {
 
 function Get-VNVDTrafficRule {
 <#	.Description
-	Function to get the VDTrafficRule for the TrafficRuleset from the given VDTrafficFilterPolicy configuration from VDPortgroup(s).
+	Get the VDTrafficRule for the TrafficRuleset from the given VDTrafficFilterPolicy configuration from VDPortgroup(s)
 
 	.Example
 	Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficFilterPolicyConfig | Get-VNVDTrafficRuleSet | Get-VNVDTrafficRule
@@ -101,7 +102,7 @@ function Get-VNVDTrafficRule {
 
 	.Example
 	Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficFilterPolicyConfig | Get-VNVDTrafficRuleSet | Get-VNVDTrafficRule myTestRule*
-	Get traffic rules whose name is like "myTestRule*".
+	Get traffic rules whose name is like "myTestRule*"
 
 	.Outputs
 	VNVDTrafficRule with at least properties for VMware.Vim.DvsTrafficRule and VMware.Vim.DistributedVirtualPortgroup for the Traffic rule set rule
@@ -144,7 +145,7 @@ function Get-VNVDTrafficRule {
 
 function Get-VNVDTrafficRuleQualifier {
 <#	.Description
-	Function to get the VDTrafficRule Qualifier for the TrafficRule from the given VDTrafficFilterPolicy configuration from VDPortgroup(s).
+	Get the VDTrafficRule Qualifier for the TrafficRule from the given VDTrafficFilterPolicy configuration from VDPortgroup(s)
 
 	.Example
 	Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficFilterPolicyConfig | Get-VNVDTrafficRule | Get-VNVDTrafficRuleQualifier
@@ -179,7 +180,7 @@ function Get-VNVDTrafficRuleQualifier {
 
 function Get-VNVDTrafficRuleAction {
 <#	.Description
-	Function to get the VDTrafficRule Action for the TrafficRule from the given VDTrafficFilterPolicy configuration from VDPortgroup(s).
+	Get the VDTrafficRule Action for the TrafficRule from the given VDTrafficFilterPolicy configuration from VDPortgroup(s)
 
 	.Example
 	Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficFilterPolicyConfig | Get-VNVDTrafficRule | Get-VNVDTrafficRuleAction

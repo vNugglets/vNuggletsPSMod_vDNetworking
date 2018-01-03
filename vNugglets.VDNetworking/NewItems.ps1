@@ -45,7 +45,7 @@ function New-VNVDTrafficRuleQualifier {
 		[parameter(ParameterSetName="IpNetworkRuleQualifier")][Switch]$NegateSourceIpAddress,
 
 		## IP qualifier of the traffic destination, either a single IP, or a CIDR-notation network. If this parameter is omitted (or $null), it will match "any IPv4 or any IPv6 address". Currently accepts IPv4 address / CIDR network
-		# See description of parameter -SourceIpAddress for more information.
+		# See description of parameter -SourceIpAddress for more information
 		[parameter(ParameterSetName="IpNetworkRuleQualifier")][ValidateScript({($_ -match "^(\d{1,3}\.){3}\d{1,3}(/\d{1,2})?$") -and ([System.Net.IPAddress]::TryParse($_.Split("/")[0], [ref]$null))})]
 		[String]$DestinationIpAddress,
 
@@ -70,16 +70,16 @@ function New-VNVDTrafficRuleQualifier {
 		## Switch:  negate the destination IP port?  If $true, then this has the effect of "not destination IP port", like "not traffic to port 443"
 		[parameter(ParameterSetName="IpNetworkRuleQualifier")][Switch]$NegateDestinationIpPort,
 
-		## TCP flag. The valid values can be found at RFC 3168.
+		## TCP flag. The valid values can be found at RFC 3168
 		[parameter(ParameterSetName="IpNetworkRuleQualifier")][Int]$TCPFlag,
 
 		## Switch: negate TCP flag? If $true, then this has the effect of "not this TCP flag", like "not traffic to with given TCP flag"
 		[parameter(ParameterSetName="IpNetworkRuleQualifier")][Switch]$NegateTCPFlag,
 
 
-		## Single MAC address or a MAC address range of the traffic source. If this parameter is omitted (or $null), it will match "any MAC address".
+		## Single MAC address or a MAC address range of the traffic source. If this parameter is omitted (or $null), it will match "any MAC address"
 		#
-		# The MAC address "range" is a mask that is used in matching the MAC address. A MAC address is considered matched if the "and" operation of the mask on the MAC address and address yields the same result. For example, a MAC of "00:A0:FF:14:FF:29" is considered matched for a address of "00:A0:C9:14:C8:29" and a mask of "FF:FF:00:FF:00:FF".
+		# The MAC address "range" is a mask that is used in matching the MAC address. A MAC address is considered matched if the "and" operation of the mask on the MAC address and address yields the same result. For example, a MAC of "00:A0:FF:14:FF:29" is considered matched for a address of "00:A0:C9:14:C8:29" and a mask of "FF:FF:00:FF:00:FF"
 		#
 		# Single MAC example:  00:00:56:01:23:45
 		# MAC range example:  00:A0:C9:14:C8:29/FF:FF:00:FF:00:FF
@@ -88,21 +88,21 @@ function New-VNVDTrafficRuleQualifier {
 		## Switch:  negate the source MAC address?  If $true, then this has the effect of "not source MAC", like "not traffic from 00:00:56:01:23:45"
 		[parameter(ParameterSetName="MacNetworkRuleQualifier")][Switch]$NegateSourceMacAddress,
 
-		## Single MAC address or a MAC address range of the traffic destination. If this parameter is omitted (or $null), it will match "any MAC address".
+		## Single MAC address or a MAC address range of the traffic destination. If this parameter is omitted (or $null), it will match "any MAC address"
 		#
-		# The MAC address "range" is a mask that is used in matching the MAC address. See description of parameter -SourceMacAddress for more information.
+		# The MAC address "range" is a mask that is used in matching the MAC address. See description of parameter -SourceMacAddress for more information
 		[parameter(ParameterSetName="MacNetworkRuleQualifier")][ValidatePattern("^([a-f0-9]{2}:){5}[a-f0-9]{2}(/([a-f0-9]{2}:){5}[a-f0-9]{2})?$")][String]$DestinationMacAddress,
 
 		## Switch:  negate the destination MAC address?  If $true, then this has the effect of "not destination MAC", like "not traffic to 00:00:56:01:23:45"
 		[parameter(ParameterSetName="MacNetworkRuleQualifier")][Switch]$NegateDestinationMacAddress,
 
-		## EtherType protocol used. Example: 0x8922. This corresponds to the EtherType field in Ethernet frame. The valid values can be found from IEEE list at: http://standards.ieee.org/regauth/ as mentioned in RFC 5342 (for example, in text format at http://standards-oui.ieee.org/ethertype/eth.txt).
+		## EtherType protocol used. Example: 0x8922. This corresponds to the EtherType field in Ethernet frame. The valid values can be found from IEEE list at: http://standards.ieee.org/regauth/ as mentioned in RFC 5342 (for example, in text format at http://standards-oui.ieee.org/ethertype/eth.txt)
 		[parameter(ParameterSetName="MacNetworkRuleQualifier")][Int]$EtherTypeProtocol,
 
 		## Switch: negate EtherType protocol? If $true, then this has the effect of "not this ethertype protocol", like "not traffic to using ethertype protocol 0x8922"
 		[parameter(ParameterSetName="MacNetworkRuleQualifier")][Switch]$NegateEtherTypeProtocol,
 
-		## VLAN ID for rule qualifier.
+		## VLAN ID for rule qualifier
 		[parameter(ParameterSetName="MacNetworkRuleQualifier")][Int]$VlanId,
 
 		## Switch: negate VLAN ID? If $true, then this has the effect of "not this VLAN ID", like "not traffic to using VLAN ID 1234"
@@ -326,7 +326,7 @@ function New-VNVDTrafficRule {
 		# "List of Network rule qualifiers. 'AND' of this array of network rule qualifiers is applied as one network traffic rule. For TrafficRule belonging to DvsFilterPolicy: There can be a maximum of 1 DvsIpNetworkRuleQualifier, 1 DvsMacNetworkRuleQualifier and 1 DvsSystemTrafficNetworkRuleQualifier for a total of 3 qualifiers"
 		[parameter(Mandatory=$true)][VMware.Vim.DvsNetworkRuleQualifier[]]$Qualifier,
 
-		## Order in which to place this rule in a rule set.  "Sequence of this rule".
+		## Order in which to place this rule in a rule set.  "Sequence of this rule"
 		[Int]$Sequence,
 
 		## Given vDPortgroup's TrafficRuleset to which to add this new VDTrafficRule
