@@ -19,18 +19,32 @@ Some of the functionality provided by the cmdlets in this module:
 <a id="quickStart"></a>
 ### QuickStart
 Chomping at the bit to get going with using this module? Of course you are! Go like this:
-- Eventually, we'll have this module available in the PowerShell Gallery, but for now: clone the GitHub project to some local folder with Git via:
-  `PS C:\> git clone https://github.com/vNugglets/vNuggletsPSMod_vDNetworking.git C:\temp\MyVNuggsVDRepoCopy`
-- put the actual PowerShell module directory in some place that you like to keep your modules, say, like this, which copies the module to your personal Modules directory:
-  `PS C:\> Copy-Item -Recurse -Path C:\temp\MyVNuggsVDRepoCopy\vNugglets.VDNetworking\ -Destination ~\Documents\WindowsPowerShell\Modules\vNugglets.VDNetworking`
-- import the PowerShell module into the current PowerShell session:
-  `PS C:\> Import-Module -Name vNugglets.VDNetworking`
-  or, if the vNugglets.VDNetworking module folder is not in your `Env:\PSModulePath`, specify the whole path to the module folder, like:
-  `PS C:\> Import-Module -Name \\myserver.dom.com\PSModules\vNugglets.VDNetworking`
+- This module available in the PowerShell Gallery! To install it on your machine or to save it for inspection, first, use one of these:
+  - Install the module:
+
+      `Find-Module vNugglets.VDNetworking | Install-Module`
+  - Or, save the module first for further inspection/distribution (always a good idea):
+  
+      `Find-Module vNugglets.VDNetworking | Save-Module -Path c:\temp\someFolder`
+- If you are not interested in- or able to use the PowerShell Gallery, you can get the module in this way:
+  - clone the GitHub project to some local folder with Git via:
+      
+    `PS C:\> git clone https://github.com/vNugglets/vNuggletsPSMod_vDNetworking.git C:\temp\MyVNuggsVDRepoCopy`
+  - put the actual PowerShell module directory in some place that you like to keep your modules, say, like this, which copies the module to your personal Modules directory:
+
+    `PS C:\> Copy-Item -Recurse -Path C:\temp\MyVNuggsVDRepoCopy\vNugglets.VDNetworking\ -Destination ~\Documents\WindowsPowerShell\Modules\vNugglets.VDNetworking`
+  - import the PowerShell module into the current PowerShell session:
+  
+    `PS C:\> Import-Module -Name vNugglets.VDNetworking`
+  - or, if the vNugglets.VDNetworking module folder is not in your `Env:\PSModulePath`, specify the whole path to the module folder when importing, like:
+
+    `PS C:\> Import-Module -Name \\myserver.dom.com\PSModules\vNugglets.VDNetworking`
 
 <a id="examplesSection"></a>
 ### Examples
-Examples are forthcoming on the web, but you can always check out the examples for each cmdlet by checking out the help for each cmdlet (see [Getting Help](#gettingHelpSection) section below)
+Examples are in two places:
+  - periodically updated in the docs/ folder for the project at [docs/examples.md](docs/examples.md)
+  - always up to date in the `Get-Help` examples for each cmdlet by checking out the help for each cmdlet (see [Getting Help](#gettingHelpSection) section below)
 
 <a id="gettingHelpSection"></a>
 ### Getting Help
@@ -40,10 +54,13 @@ The cmdlets in this module all have proper help, so you can learn and discover j
 
 <a id="changelog"></a>
 ### ChangeLog
-The [ChangeLog](ChangeLog.md) for this module is, of course, a log of the major changes through the module's hitory.  Enjoy the story.
+The [ChangeLog](ChangeLog.md) for this module is, of course, a log of the major changes through the module's history.  Enjoy the story.
 
 ### Other Notes
 A few notes on updates to this repo:
+
+Jan 2018
+- initial public "prod" release
 
 Dec 2017
 - initial public dev release
