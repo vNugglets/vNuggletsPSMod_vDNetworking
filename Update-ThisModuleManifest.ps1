@@ -14,7 +14,7 @@ begin {
 	$hshModManifestParams = @{
 		# Confirm = $true
 		Path = $strFilespecForPsd1
-		ModuleVersion = "0.5.0"
+		ModuleVersion = "1.0.0"
 		CompanyName = 'vNugglets for the VMware PowerCLI community'
 		Copyright = "MIT License"
 		Description = "Module with functions for managing VMware vSphere Virtual Distributed Networking components like traffic filtering and marking"

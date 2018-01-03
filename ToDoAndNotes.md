@@ -2,8 +2,7 @@
 
 
 ### Need to make:
-- Examples/docs
-- Tests
+- Tests (partial, currently, written for interactive test, not fully automated)
 
 ### Maybe eventually add/update:
 - `Copy-VNVDTrafficRule -Rule -Ruleset <rulesettowhichtocopy>`
@@ -13,6 +12,7 @@
 - `Set-VNVDTrafficRuleSet -Precedence -Rule`
     - to allow for the overwriting of the rules in the ruleset with just the new Rule(s) specified, and to allow setting of Precedence (though, may only ever be one TrafficRuleSet per vDPortgroup)
 - add `-RunAsync` to `New-VNVDTrafficRule`, `Remove-VNVDTrafficRule`, and any other cmdlet where it makes sense
+- add tidbit to `makeExamplesMD.ps1` that wraps long lines at ~105 characters or so, so that web presentation of the .md does not require reader to scroll long examples
 
 ### Done (to at least some extent -- some may have further features to implement):
 - `Get-VNVDTrafficFilterPolicyConfig`
@@ -34,6 +34,7 @@
 - `Get-VNVDTrafficRuleAction`
 - `Set-VNVDTrafficRuleSet -Enabled -TrafficRuleset`
     - define cmdlet `ConfirmImpact` to High
+- Examples/docs
 
 Quick examples:
 ## Get
