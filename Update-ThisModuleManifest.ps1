@@ -28,7 +28,7 @@ begin {
 		NestedModules = Write-Output GetItems.ps1 NewItems.ps1 RemoveItems.ps1 SetItems.ps1 "${strModuleName}_SupportingFunctions.ps1"
 		PowerShellVersion = [System.Version]"5.0"
 		ProjectUri = "https://github.com/vNugglets/vNuggletsPSMod_vDNetworking"
-		ReleaseNotes = "See release notes at https://github.com/vNugglets/vNuggletsPSMod_vDNetworking/blob/master/ChangeLog.md"
+		ReleaseNotes = "See ReadMe and other docs at https://github.com/vNugglets/vNuggletsPSMod_vDNetworking"
 		RootModule = "${strModuleName}_ModRoot.psm1"
 		ScriptsToProcess = "${strModuleName}_ClassDefinition.ps1"
 		Tags = Write-Output vNugglets VMware vSphere PowerCLI VDPortGroup TrafficFiltering Filter Filtering TrafficMarking Mark Marking VDSwitch
