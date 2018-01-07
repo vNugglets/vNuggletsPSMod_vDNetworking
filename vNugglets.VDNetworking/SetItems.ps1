@@ -27,11 +27,11 @@ function Set-VNVDTrafficRuleSet {
 		$TrafficRuleSet | Foreach-Object {
 			$oThisVNVDTrafficRuleset = $_
 			$strMsgForShouldProcess_Target = "Traffic ruleset '{0}' on vDPG '{1}'" -f $oThisVNVDTrafficRuleset.TrafficRuleset.Key, $oThisVNVDTrafficRuleset.VDPortgroupView.Name
-			$strMsgForShouldProcess_Action = "{0} ruleset" -f $(if ($Enable) {"Enable"} else {"Disable"})
+			$strMsgForShouldProcess_Action = "{0} ruleset" -f $(if ($Enabled) {"Enable"} else {"Disable"})
 			if ($PSCmdlet.ShouldProcess($strMsgForShouldProcess_Target, $strMsgForShouldProcess_Action)) {
 				try {
 					## use the helper function to add this new TrafficRule to the TrafficRuleSet Rules array
-					_Set-VNVDTrafficRuleset_helper -TrafficRuleSet $oThisVNVDTrafficRuleset -Enabled:$Enabled
+					Set-VNVDTrafficRuleset_helper -TrafficRuleSet $oThisVNVDTrafficRuleset -Enabled:$Enabled
 				} ## end try
 				catch {Throw $_}
 			} ## end if
