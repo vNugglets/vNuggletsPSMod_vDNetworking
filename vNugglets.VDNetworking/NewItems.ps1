@@ -25,6 +25,7 @@ function New-VNVDTrafficRuleQualifier {
 	.Outputs
 	VMware.Vim.DvsNetworkRuleQualifier
 #>
+	[CmdletBinding(SupportsShouldProcess=$true)]
 	[OutputType([VMware.Vim.DvsNetworkRuleQualifier])]
 	param (
 		## Type of system traffic, for use in making SystemTraffic network rule qualifier
@@ -110,132 +111,134 @@ function New-VNVDTrafficRuleQualifier {
 	)
 
 	process {
-		Switch ($PSCmdlet.ParameterSetName) {
-			## SystemTrafficNetworkRuleQualifier
-			## VMware.Vim.DvsSystemTrafficNetworkRuleQualifier, https://vdc-repo.vmware.com/vmwb-repository/dcr-public/98d63b35-d822-47fe-a87a-ddefd469df06/8212891f-77f8-4d27-ab3b-9e2fa52e5355/doc/vim.dvs.TrafficRule.SystemTrafficQualifier.html
-			"SystemTrafficNetworkRuleQualifier" {
-				New-Object -TypeName VMware.Vim.DvsSystemTrafficNetworkRuleQualifier -Property @{
-					typeOfSystemTraffic = New-Object -Type VMware.Vim.StringExpression -Property @{
-						Value = $SystemTrafficType
-						Negate = $NegateSystemTrafficType
+		if ($PSCmdlet.ShouldProcess("this PowerShell session", "Create new Traffic Qualifier object using the '$($PSCmdlet.ParameterSetName)' parameter set")) {
+			Switch ($PSCmdlet.ParameterSetName) {
+				## SystemTrafficNetworkRuleQualifier
+				## VMware.Vim.DvsSystemTrafficNetworkRuleQualifier, https://vdc-repo.vmware.com/vmwb-repository/dcr-public/98d63b35-d822-47fe-a87a-ddefd469df06/8212891f-77f8-4d27-ab3b-9e2fa52e5355/doc/vim.dvs.TrafficRule.SystemTrafficQualifier.html
+				"SystemTrafficNetworkRuleQualifier" {
+					New-Object -TypeName VMware.Vim.DvsSystemTrafficNetworkRuleQualifier -Property @{
+						typeOfSystemTraffic = New-Object -Type VMware.Vim.StringExpression -Property @{
+							Value = $SystemTrafficType
+							Negate = $NegateSystemTrafficType
+						} ## end new-object
 					} ## end new-object
-				} ## end new-object
-				break
-			} ## end case
+					break
+				} ## end case
 
 
-			## IpNetworkRuleQualifier
-			## VMware.Vim.DvsIpNetworkRuleQualifier, https://vdc-repo.vmware.com/vmwb-repository/dcr-public/98d63b35-d822-47fe-a87a-ddefd469df06/8212891f-77f8-4d27-ab3b-9e2fa52e5355/doc/vim.dvs.TrafficRule.IpQualifier.html
-			"IpNetworkRuleQualifier" {
-				## hash table to hold the properties for creating a new DvsIpNetworkRuleQualifier object
-				$hshPropertiesForNewDvsIpNetworkRuleQualifier = @{}
+				## IpNetworkRuleQualifier
+				## VMware.Vim.DvsIpNetworkRuleQualifier, https://vdc-repo.vmware.com/vmwb-repository/dcr-public/98d63b35-d822-47fe-a87a-ddefd469df06/8212891f-77f8-4d27-ab3b-9e2fa52e5355/doc/vim.dvs.TrafficRule.IpQualifier.html
+				"IpNetworkRuleQualifier" {
+					## hash table to hold the properties for creating a new DvsIpNetworkRuleQualifier object
+					$hshPropertiesForNewDvsIpNetworkRuleQualifier = @{}
 
-				## make source- and destination address objects with either SingleIp or IpRange objects, accordingly based on parameter provided, if provided at all
-				if ($PSBoundParameters.ContainsKey("SourceIpAddress")) {
-					$oSrcIpAddress = if ($SourceIpAddress -match "/") {
-						$strIp, [int]$intSubnetMaskLength = $SourceIpAddress.Split("/")
-						New-Object -Type VMware.Vim.IpRange -Property @{
-							addressPrefix = $strIp
-							prefixLength = $intSubnetMaskLength
-							negate = $NegateSourceIpAddress
-						} ## end new-object
-					} else {New-Object -Type VMware.Vim.SingleIp -Property @{address = $SourceIpAddress; negate = $NegateSourceIpAddress}} ## end else
+					## make source- and destination address objects with either SingleIp or IpRange objects, accordingly based on parameter provided, if provided at all
+					if ($PSBoundParameters.ContainsKey("SourceIpAddress")) {
+						$oSrcIpAddress = if ($SourceIpAddress -match "/") {
+							$strIp, [int]$intSubnetMaskLength = $SourceIpAddress.Split("/")
+							New-Object -Type VMware.Vim.IpRange -Property @{
+								addressPrefix = $strIp
+								prefixLength = $intSubnetMaskLength
+								negate = $NegateSourceIpAddress
+							} ## end new-object
+						} else {New-Object -Type VMware.Vim.SingleIp -Property @{address = $SourceIpAddress; negate = $NegateSourceIpAddress}} ## end else
 
-					$hshPropertiesForNewDvsIpNetworkRuleQualifier["sourceAddress"] = $oSrcIpAddress
-				} ## end if
-
-				if ($PSBoundParameters.ContainsKey("DestinationIpAddress")) {
-					$oDestIpAddress = if ($DestinationIpAddress -match "/") {
-						$strIp, [int]$intSubnetMaskLength = $DestinationIpAddress.Split("/")
-						New-Object -Type VMware.Vim.IpRange -Property @{
-							addressPrefix = $strIp
-							prefixLength = $intSubnetMaskLength
-							negate = $NegateDestinationIpAddress
-						} ## end new-object
-					} else {New-Object -Type VMware.Vim.SingleIp -Property @{address = $DestinationIpAddress; negate = $NegateDestinationIpAddress}} ## end else
-
-					$hshPropertiesForNewDvsIpNetworkRuleQualifier["destinationAddress"] = $oDestIpAddress
-				} ## end if
-
-				## add other hashtable items if the given parameters were specified
-				if ($PSBoundParameters.ContainsKey("Protocol")) {$hshPropertiesForNewDvsIpNetworkRuleQualifier["protocol"] = New-Object -Type VMware.Vim.IntExpression -Property @{Value = $Protocol; Negate = $NegateProtocol}}
-				if ($PSBoundParameters.ContainsKey("TCPFlag")) {$hshPropertiesForNewDvsIpNetworkRuleQualifier["tcpFlags"] = New-Object -Type VMware.Vim.IntExpression -Property @{Value = $TCPFlag; Negate = $NegateTCPFlag}}
-
-				## the Source- and Destination IPPort config items, if any
-				if ($PSBoundParameters.ContainsKey("SourceIpPort")) {
-					$oSrcIpPort = if ($SourceIpPort -match "-") {
-						[int]$intIpPort_start, [int]$intIpPort_end = $SourceIpPort.Split("-")
-						New-Object -TypeName VMware.Vim.DvsIpPortRange -Property @{
-							startPortNumber = $intIpPort_start
-							endPortNumber = $intIpPort_end
-							negate = $NegateSourceIpPort
-						} ## end new-object
+						$hshPropertiesForNewDvsIpNetworkRuleQualifier["sourceAddress"] = $oSrcIpAddress
 					} ## end if
-					else {New-Object -Type VMware.Vim.DvsSingleIpPort -Property @{portNumber = $SourceIpPort; negate = $NegateSourceIpPort}} ## end else
 
-					$hshPropertiesForNewDvsIpNetworkRuleQualifier["sourceIpPort"] = $oSrcIpPort
-				} ## end if
+					if ($PSBoundParameters.ContainsKey("DestinationIpAddress")) {
+						$oDestIpAddress = if ($DestinationIpAddress -match "/") {
+							$strIp, [int]$intSubnetMaskLength = $DestinationIpAddress.Split("/")
+							New-Object -Type VMware.Vim.IpRange -Property @{
+								addressPrefix = $strIp
+								prefixLength = $intSubnetMaskLength
+								negate = $NegateDestinationIpAddress
+							} ## end new-object
+						} else {New-Object -Type VMware.Vim.SingleIp -Property @{address = $DestinationIpAddress; negate = $NegateDestinationIpAddress}} ## end else
 
-				if ($PSBoundParameters.ContainsKey("DestinationIpPort")) {
-					$oDestIpPort = if ($DestinationIpPort -match "-") {
-						[int]$intIpPort_start, [int]$intIpPort_end = $DestinationIpPort.Split("-")
-						New-Object -TypeName VMware.Vim.DvsIpPortRange -Property @{
-							startPortNumber = $intIpPort_start
-							endPortNumber = $intIpPort_end
-							negate = $NegateDestinationIpPort
-						} ## end new-object
+						$hshPropertiesForNewDvsIpNetworkRuleQualifier["destinationAddress"] = $oDestIpAddress
 					} ## end if
-					else {New-Object -Type VMware.Vim.DvsSingleIpPort -Property @{portNumber = $DestinationIpPort; negate = $NegateDestinationIpPort}} ## end else
 
-					$hshPropertiesForNewDvsIpNetworkRuleQualifier["destinationIpPort"] = $oDestIpPort
-				} ## end if
+					## add other hashtable items if the given parameters were specified
+					if ($PSBoundParameters.ContainsKey("Protocol")) {$hshPropertiesForNewDvsIpNetworkRuleQualifier["protocol"] = New-Object -Type VMware.Vim.IntExpression -Property @{Value = $Protocol; Negate = $NegateProtocol}}
+					if ($PSBoundParameters.ContainsKey("TCPFlag")) {$hshPropertiesForNewDvsIpNetworkRuleQualifier["tcpFlags"] = New-Object -Type VMware.Vim.IntExpression -Property @{Value = $TCPFlag; Negate = $NegateTCPFlag}}
 
-				## make the actual new object
-				New-Object -TypeName VMware.Vim.DvsIpNetworkRuleQualifier -Property $hshPropertiesForNewDvsIpNetworkRuleQualifier
-				break
-			} ## end case
+					## the Source- and Destination IPPort config items, if any
+					if ($PSBoundParameters.ContainsKey("SourceIpPort")) {
+						$oSrcIpPort = if ($SourceIpPort -match "-") {
+							[int]$intIpPort_start, [int]$intIpPort_end = $SourceIpPort.Split("-")
+							New-Object -TypeName VMware.Vim.DvsIpPortRange -Property @{
+								startPortNumber = $intIpPort_start
+								endPortNumber = $intIpPort_end
+								negate = $NegateSourceIpPort
+							} ## end new-object
+						} ## end if
+						else {New-Object -Type VMware.Vim.DvsSingleIpPort -Property @{portNumber = $SourceIpPort; negate = $NegateSourceIpPort}} ## end else
+
+						$hshPropertiesForNewDvsIpNetworkRuleQualifier["sourceIpPort"] = $oSrcIpPort
+					} ## end if
+
+					if ($PSBoundParameters.ContainsKey("DestinationIpPort")) {
+						$oDestIpPort = if ($DestinationIpPort -match "-") {
+							[int]$intIpPort_start, [int]$intIpPort_end = $DestinationIpPort.Split("-")
+							New-Object -TypeName VMware.Vim.DvsIpPortRange -Property @{
+								startPortNumber = $intIpPort_start
+								endPortNumber = $intIpPort_end
+								negate = $NegateDestinationIpPort
+							} ## end new-object
+						} ## end if
+						else {New-Object -Type VMware.Vim.DvsSingleIpPort -Property @{portNumber = $DestinationIpPort; negate = $NegateDestinationIpPort}} ## end else
+
+						$hshPropertiesForNewDvsIpNetworkRuleQualifier["destinationIpPort"] = $oDestIpPort
+					} ## end if
+
+					## make the actual new object
+					New-Object -TypeName VMware.Vim.DvsIpNetworkRuleQualifier -Property $hshPropertiesForNewDvsIpNetworkRuleQualifier
+					break
+				} ## end case
 
 
-			## MacNetworkRuleQualifier
-			## VMware.Vim.DvsMacNetworkRuleQualifier, https://vdc-repo.vmware.com/vmwb-repository/dcr-public/98d63b35-d822-47fe-a87a-ddefd469df06/8212891f-77f8-4d27-ab3b-9e2fa52e5355/doc/vim.dvs.TrafficRule.MacQualifier.html
-			"MacNetworkRuleQualifier" {
-				## hash table to hold the properties for creating a new DvsMacNetworkRuleQualifier object
-				$hshPropertiesForNewDvsMacNetworkRuleQualifier = @{}
+				## MacNetworkRuleQualifier
+				## VMware.Vim.DvsMacNetworkRuleQualifier, https://vdc-repo.vmware.com/vmwb-repository/dcr-public/98d63b35-d822-47fe-a87a-ddefd469df06/8212891f-77f8-4d27-ab3b-9e2fa52e5355/doc/vim.dvs.TrafficRule.MacQualifier.html
+				"MacNetworkRuleQualifier" {
+					## hash table to hold the properties for creating a new DvsMacNetworkRuleQualifier object
+					$hshPropertiesForNewDvsMacNetworkRuleQualifier = @{}
 
-				## make source- and destination address objects with either SingleMac or MacRange objects, accordingly based on parameter provided, if provided at all
-				if ($PSBoundParameters.ContainsKey("SourceMacAddress")) {
-					$oSrcMacAddress = if ($SourceMacAddress -match "/") {
-						$strMac, $strMacMask = $SourceMacAddress.Split("/")
-						New-Object -Type VMware.Vim.MacRange -Property @{
-							address = $strMac
-							mask = $strMacMask
-							negate = $NegateSourceMacAddress
-						} ## end new-object
-					} else {New-Object -Type VMware.Vim.SingleMac -Property @{address = $SourceMacAddress; negate = $NegateSourceMacAddress}} ## end else
+					## make source- and destination address objects with either SingleMac or MacRange objects, accordingly based on parameter provided, if provided at all
+					if ($PSBoundParameters.ContainsKey("SourceMacAddress")) {
+						$oSrcMacAddress = if ($SourceMacAddress -match "/") {
+							$strMac, $strMacMask = $SourceMacAddress.Split("/")
+							New-Object -Type VMware.Vim.MacRange -Property @{
+								address = $strMac
+								mask = $strMacMask
+								negate = $NegateSourceMacAddress
+							} ## end new-object
+						} else {New-Object -Type VMware.Vim.SingleMac -Property @{address = $SourceMacAddress; negate = $NegateSourceMacAddress}} ## end else
 
-					$hshPropertiesForNewDvsMacNetworkRuleQualifier["sourceAddress"] = $oSrcMacAddress
-				} ## end if
+						$hshPropertiesForNewDvsMacNetworkRuleQualifier["sourceAddress"] = $oSrcMacAddress
+					} ## end if
 
-				if ($PSBoundParameters.ContainsKey("DestinationMacAddress")) {
-					$oDestMacAddress = if ($DestinationMacAddress -match "/") {
-						$strMac, $strMacMask = $DestinationMacAddress.Split("/")
-						New-Object -Type VMware.Vim.MacRange -Property @{
-							address = $strMac
-							mask = $strMacMask
-							negate = $NegateDestinationMacAddress
-						} ## end new-object
-					} else {New-Object -Type VMware.Vim.SingleMac -Property @{address = $DestinationMacAddress; negate = $NegateDestinationMacAddress}} ## end else
+					if ($PSBoundParameters.ContainsKey("DestinationMacAddress")) {
+						$oDestMacAddress = if ($DestinationMacAddress -match "/") {
+							$strMac, $strMacMask = $DestinationMacAddress.Split("/")
+							New-Object -Type VMware.Vim.MacRange -Property @{
+								address = $strMac
+								mask = $strMacMask
+								negate = $NegateDestinationMacAddress
+							} ## end new-object
+						} else {New-Object -Type VMware.Vim.SingleMac -Property @{address = $DestinationMacAddress; negate = $NegateDestinationMacAddress}} ## end else
 
-					$hshPropertiesForNewDvsMacNetworkRuleQualifier["destinationAddress"] = $oDestMacAddress
-				} ## end if
+						$hshPropertiesForNewDvsMacNetworkRuleQualifier["destinationAddress"] = $oDestMacAddress
+					} ## end if
 
-				## add other hashtable items if the given parameters were specified
-				if ($PSBoundParameters.ContainsKey("EtherTypeProtocol")) {$hshPropertiesForNewDvsMacNetworkRuleQualifier["protocol"] = New-Object -Type VMware.Vim.IntExpression -Property @{Value = $EtherTypeProtocol; Negate = $NegateEtherTypeProtocol}}
-				if ($PSBoundParameters.ContainsKey("VlanId")) {$hshPropertiesForNewDvsMacNetworkRuleQualifier["vlanId"] = New-Object -Type VMware.Vim.IntExpression -Property @{Value = $VlanId; Negate = $NegateVlanId}}
+					## add other hashtable items if the given parameters were specified
+					if ($PSBoundParameters.ContainsKey("EtherTypeProtocol")) {$hshPropertiesForNewDvsMacNetworkRuleQualifier["protocol"] = New-Object -Type VMware.Vim.IntExpression -Property @{Value = $EtherTypeProtocol; Negate = $NegateEtherTypeProtocol}}
+					if ($PSBoundParameters.ContainsKey("VlanId")) {$hshPropertiesForNewDvsMacNetworkRuleQualifier["vlanId"] = New-Object -Type VMware.Vim.IntExpression -Property @{Value = $VlanId; Negate = $NegateVlanId}}
 
-				New-Object -TypeName VMware.Vim.DvsMacNetworkRuleQualifier -Property $hshPropertiesForNewDvsMacNetworkRuleQualifier
-			} ## end case
-		} ## end switch
+					New-Object -TypeName VMware.Vim.DvsMacNetworkRuleQualifier -Property $hshPropertiesForNewDvsMacNetworkRuleQualifier
+				} ## end case
+			} ## end switch
+		} ## end if
 	} ## end process
 } ## end function
 
@@ -260,6 +263,7 @@ function New-VNVDTrafficRuleAction {
 	.Outputs
 	VMware.Vim.DvsNetworkRuleAction
 #>
+	[CmdletBinding(SupportsShouldProcess=$true)]
 	[OutputType([VMware.Vim.DvsNetworkRuleAction])]
 	param (
 		## Make an Accept ("Allow") rule action?
@@ -275,20 +279,22 @@ function New-VNVDTrafficRuleAction {
 		[parameter(ParameterSetName="DvsUpdateTagNetworkRuleAction")][ValidateRange(0,7)][Int]$QosTag
 	)
 	process {
-		Switch ($PSCmdlet.ParameterSetName) {
-			"DvsAcceptNetworkRuleAction" {New-Object -TypeName VMware.Vim.DvsAcceptNetworkRuleAction; break}
-			"DvsDropNetworkRuleAction" {New-Object -TypeName VMware.Vim.DvsDropNetworkRuleAction; break}
+		if ($PSCmdlet.ShouldProcess("this PowerShell session", "Create new Traffic Rule Action object using the '$($PSCmdlet.ParameterSetName)' parameter set")) {
+			Switch ($PSCmdlet.ParameterSetName) {
+				"DvsAcceptNetworkRuleAction" {New-Object -TypeName VMware.Vim.DvsAcceptNetworkRuleAction; break}
+				"DvsDropNetworkRuleAction" {New-Object -TypeName VMware.Vim.DvsDropNetworkRuleAction; break}
 
-			# DvsUpdateTagNetworkRuleAction, https://vdc-repo.vmware.com/vmwb-repository/dcr-public/98d63b35-d822-47fe-a87a-ddefd469df06/8212891f-77f8-4d27-ab3b-9e2fa52e5355/doc/vim.dvs.TrafficRule.UpdateTagAction.html
-			"DvsUpdateTagNetworkRuleAction" {
-				## hash table to hold the properties for creating a new RuleAction object
-				$hshPropertiesForNewRuleAction = @{}
-				if ($PSBoundParameters.ContainsKey("DscpTag")) {$hshPropertiesForNewRuleAction["dscpTag"] = $DscpTag}
-				if ($PSBoundParameters.ContainsKey("QosTag")) {$hshPropertiesForNewRuleAction["qosTag"] = $QosTag}
+				# DvsUpdateTagNetworkRuleAction, https://vdc-repo.vmware.com/vmwb-repository/dcr-public/98d63b35-d822-47fe-a87a-ddefd469df06/8212891f-77f8-4d27-ab3b-9e2fa52e5355/doc/vim.dvs.TrafficRule.UpdateTagAction.html
+				"DvsUpdateTagNetworkRuleAction" {
+					## hash table to hold the properties for creating a new RuleAction object
+					$hshPropertiesForNewRuleAction = @{}
+					if ($PSBoundParameters.ContainsKey("DscpTag")) {$hshPropertiesForNewRuleAction["dscpTag"] = $DscpTag}
+					if ($PSBoundParameters.ContainsKey("QosTag")) {$hshPropertiesForNewRuleAction["qosTag"] = $QosTag}
 
-				New-Object -TypeName VMware.Vim.DvsUpdateTagNetworkRuleAction -Property $hshPropertiesForNewRuleAction
-			} ## end case
-		} ## end switch
+					New-Object -TypeName VMware.Vim.DvsUpdateTagNetworkRuleAction -Property $hshPropertiesForNewRuleAction
+				} ## end case
+			} ## end switch
+		} ## end if
 	} ## end process
 } ## end function
 
@@ -355,12 +361,11 @@ function New-VNVDTrafficRule {
 
 		$TrafficRuleSet | Foreach-Object {
 			$oThisVNVDTrafficRuleset = $_
-			$oVDPortgroupView_ThisTrafficRuleset = $oThisVNVDTrafficRuleset.VDPortgroupView
 			$strMsgForShouldProcess = "Traffic ruleset '{0}' on vDPG '{1}'" -f $oThisVNVDTrafficRuleset.TrafficRuleset.Key, $oThisVNVDTrafficRuleset.VDPortgroupView.Name
 			if ($PSCmdlet.ShouldProcess($strMsgForShouldProcess, "add traffic rule named '$Name'")) {
 				try {
 					## use the helper function to add this new TrafficRule to the TrafficRuleSet Rules array
-					$oUpdatedTrafficRuleset = _Set-VNVDTrafficRuleset_helper -TrafficRuleSet $oThisVNVDTrafficRuleset -TrafficRule (New-Object -TypeName VMware.Vim.DvsTrafficRule -Property $hshParamForNewRuleObject) -RuleOperation Add
+					$oUpdatedTrafficRuleset = Set-VNVDTrafficRuleset_helper -TrafficRuleSet $oThisVNVDTrafficRuleset -TrafficRule (New-Object -TypeName VMware.Vim.DvsTrafficRule -Property $hshParamForNewRuleObject) -RuleOperation Add
 					$oUpdatedTrafficRuleset | Get-VNVDTrafficRule -LiteralName $Name
 				} ## end try
 				catch {Throw $_}

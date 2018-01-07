@@ -34,6 +34,8 @@ $oTestVDPG = New-VDPortgroup -VDSwitch $oTestVDSwitch -Name "vNuggsTestVDPG_toDe
         $oTestVDPG | Get-VNVDTrafficRuleSet | New-VNVDTrafficRule -Name "testRule2_toDelete_${strGuidForThisTest}" -Action (New-VNVDTrafficRuleAction -QosTag 7 -DscpTag 30) -Direction both -Qualifier (New-VNVDTrafficRuleQualifier -SystemTrafficType vdp), (New-VNVDTrafficRuleQualifier -DestinationIpAddress 172.16.100.0/24)
     - get TrafficRuleSet (should have three TrafficRules)
         $oTestVDPG | Get-VNVDTrafficRuleSet
+    - enable the TrafficRuleSet
+        $oTestVDPG | Get-VNVDTrafficRuleSet | Set-VNVDTrafficRuleSet -Enabled
     - get TrafficRules (should be three)
         $oTestVDPG | Get-VNVDTrafficRuleSet | Get-VNVDTrafficRule | Measure-Object
     - remove two TrafficRules
