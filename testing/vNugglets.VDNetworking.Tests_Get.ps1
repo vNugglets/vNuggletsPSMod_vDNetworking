@@ -28,12 +28,15 @@ $oTestVDPG = New-VDPortgroup -VDSwitch $oTestVDSwitch -Name "vNuggsTestVDPG_toDe
     - get TrafficRuleSet (should be disabled)
         $oTestVDPG | Get-VNVDTrafficRuleSet
     - get TrafficRule (should be 0)
+        $oTestVDPG | Get-VNVDTrafficRuleSet | Get-VNVDTrafficRule
     - create three TrafficRules
         $oTestVDPG | Get-VNVDTrafficRuleSet | New-VNVDTrafficRule -Name "testRule0_toDelete_${strGuidForThisTest}" -Action (New-VNVDTrafficRuleAction -Allow) -Direction both -Qualifier (New-VNVDTrafficRuleQualifier -SystemTrafficType faultTolerance -NegateSystemTrafficType), (New-VNVDTrafficRuleQualifier -SourceIpAddress 172.16.10.0/24 -DestinationIpAddress 10.0.0.0/8 -SourceIpPort 443-444)
         $oTestVDPG | Get-VNVDTrafficRuleSet | New-VNVDTrafficRule -Name "testRule1_toDelete_${strGuidForThisTest}" -Action (New-VNVDTrafficRuleAction -QosTag 5 -DscpTag 23) -Direction both -Qualifier (New-VNVDTrafficRuleQualifier -SystemTrafficType vsan)
         $oTestVDPG | Get-VNVDTrafficRuleSet | New-VNVDTrafficRule -Name "testRule2_toDelete_${strGuidForThisTest}" -Action (New-VNVDTrafficRuleAction -QosTag 7 -DscpTag 30) -Direction both -Qualifier (New-VNVDTrafficRuleQualifier -SystemTrafficType vdp), (New-VNVDTrafficRuleQualifier -DestinationIpAddress 172.16.100.0/24)
     - get TrafficRuleSet (should have three TrafficRules)
         $oTestVDPG | Get-VNVDTrafficRuleSet
+    - enable the TrafficRuleSet
+        $oTestVDPG | Get-VNVDTrafficRuleSet | Set-VNVDTrafficRuleSet -Enabled
     - get TrafficRules (should be three)
         $oTestVDPG | Get-VNVDTrafficRuleSet | Get-VNVDTrafficRule | Measure-Object
     - remove two TrafficRules

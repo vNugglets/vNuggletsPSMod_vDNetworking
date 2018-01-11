@@ -20,8 +20,8 @@ function Get-VNVDTrafficFilterPolicyConfig {
 		$VDPortgroup | Foreach-Object {
 			$oThisVDPG = $_
 			New-Object -Type VNVDTrafficFilterPolicyConfig -Property @{
-				TrafficFilterPolicyConfig = $_.ExtensionData.Config.DefaultPortConfig.FilterPolicy.FilterConfig
-				VDPortgroupView = $_.ExtensionData
+				TrafficFilterPolicyConfig = $oThisVDPG.ExtensionData.Config.DefaultPortConfig.FilterPolicy.FilterConfig
+				VDPortgroupView = $oThisVDPG.ExtensionData
 			} ## end new-object
 		} ## end foreach-object
 	} ## end process
