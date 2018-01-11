@@ -15,7 +15,7 @@ begin {
 	$hshManifestParams = @{
 		# Confirm = $true
 		Path = $strFilespecForPsd1
-		ModuleVersion = "1.0.0"
+		ModuleVersion = "1.1.0"
 		Author = "Matt Boren (@mtboren)"
 		CompanyName = 'vNugglets for the VMware PowerCLI community'
 		Copyright = "MIT License"

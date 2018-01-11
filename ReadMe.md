@@ -43,7 +43,7 @@ Chomping at the bit to get going with using this module? Of course you are! Go l
 <a id="examplesSection"></a>
 ### Examples
 Examples are in two places:
-  - periodically updated in the docs/ folder for the project at [docs/examples.md](docs/examples.md)
+  - periodically updated in the docs/ folder for the project at [docs/examples.md](docs/examples.md), which is also accessible via the project's [GitHub Pages examples page](https://vnugglets.github.io/vNuggletsPSMod_vDNetworking/examples.html)
   - always up to date in the `Get-Help` examples for each cmdlet by checking out the help for each cmdlet (see [Getting Help](#gettingHelpSection) section below)
 
 <a id="gettingHelpSection"></a>

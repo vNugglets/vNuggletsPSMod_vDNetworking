@@ -1,6 +1,6 @@
 ### ChangeLog for vNugglets.VDNetworking PowerShell module
 
-#### v1.0.next, Sometime 2018
+#### v1.1.0, Jan 2018
 - \[update] Added `-WhatIf` support to `New-VNVDTrafficRuleAction`, `New-VNVDTrafficRuleQualifier`
 - \[bugfix] `-Enabled` parameter on `Set-VNVDTrafficRuleSet` was not working as expected. Fixed
 - \[bugfix] Corrected issue where module loaded improperly if required VDS module was not already loaded
