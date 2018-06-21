@@ -41,6 +41,13 @@ Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficFilt
 Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficRuleSet
 ```
 
+#### `Get-VNVSwitchByVMHostNetworkAdapter`: Get the virtual switch (standard or distributed) with which the given VMHostNetworkAdapter physical NIC is associated, if any.
+
+```PowerShell
+## Get the vSwitch with which VMNIC2 on myVMHost0.dom.com is associated
+Get-VMHost myVMHost0.dom.com | Get-VMHostNetworkAdapter -Name vmnic2 | Get-VNVSwitchByVMHostNetworkAdapter
+```
+
 #### `New-VNVDTrafficRule`: Make new Traffic Rule and add it to the given Traffic Ruleset of a vDPortgroup traffic filter policy
 
 ```PowerShell
@@ -98,5 +105,17 @@ Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficFilt
 
 ## Get the traffic ruleset from the given vDPG and Disable it
 Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficRuleSet | Set-VNVDTrafficRuleSet -Enabled:$false
+```
+
+#### `Set-VNVMHostNetworkAdapterVDUplink`: Set the VDSwitch Uplink for a VMHost physical NIC ("VMNIC") on the VDSwitch of which the VMNIC is already a part
+
+```PowerShell
+## Set the VMNIC "vminic3" from VMHost myVMHost0.dom.com to be in VDUplink "Uplinks-02" on VDS myVDSwitch0 (the vDSwitch of which VMNIC3 is a part)
+Get-VMHost myVMHost0.dom.com | Get-VMHostNetworkAdapter -Name vmnic3 | Set-VNVMHostNetworkAdapterVDUplink -UplinkName Uplinks-02
+
+## Set the VMNICs "vminic2", "vminic3" from VMHost myVMHost0.dom.com to be in VDUplinks "Uplinks-01", "Uplinks-02" on VDS myVDSwitch0 (the vDSwitch of which VMNIC2 and VMNIC3 are a part)
+## Could then check out the current status like:
+## Get-VDSwitch myVDSwitch0 | Get-VDPort -Uplink | Where-Object {$_.ProxyHost.Name -eq "myVMHost0.dom.com"} | Select-Object key, ConnectedEntity, ProxyHost, Name | Sort-Object ProxyHost, Name
+Set-VNVMHostNetworkAdapterVDUplink -VMHostNetworkAdapter (Get-VMHost myVMHost0.dom.com | Get-VMHostNetworkAdapter -Name vmnic2, vmnic3) -UplinkName Uplinks-01, Uplinks-02
 ```
 
