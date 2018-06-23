@@ -15,7 +15,7 @@ begin {
 	$hshManifestParams = @{
 		# Confirm = $true
 		Path = $strFilespecForPsd1
-		ModuleVersion = "1.1.0"
+		ModuleVersion = "1.2.0"
 		Author = "Matt Boren (@mtboren)"
 		CompanyName = 'vNugglets for the VMware PowerCLI community'
 		Copyright = "MIT License"
@@ -23,7 +23,7 @@ begin {
 		# AliasesToExport = @()
 		FileList = Write-Output "${strModuleName}.psd1" "${strModuleName}_ModRoot.psm1" "en-US\about_${strModuleName}.help.txt" GetItems.ps1 NewItems.ps1 RemoveItems.ps1 SetItems.ps1 "${strModuleName}_SupportingFunctions.ps1" "${strModuleName}.format.ps1xml" "${strModuleName}_init.ps1" "${strModuleName}_ClassDefinition.ps1"
 		FormatsToProcess = "${strModuleName}.format.ps1xml"
-		FunctionsToExport = Write-Output Get-VNVDTrafficFilterPolicyConfig Get-VNVDTrafficRuleSet Get-VNVDTrafficRule Get-VNVDTrafficRuleQualifier Get-VNVDTrafficRuleAction New-VNVDTrafficRuleQualifier New-VNVDTrafficRuleAction New-VNVDTrafficRule Remove-VNVDTrafficRule Set-VNVDTrafficRuleSet
+		FunctionsToExport = Write-Output Get-VNVDTrafficFilterPolicyConfig Get-VNVDTrafficRuleSet Get-VNVDTrafficRule Get-VNVDTrafficRuleQualifier Get-VNVDTrafficRuleAction Get-VNVSwitchByVMHostNetworkAdapter New-VNVDTrafficRuleQualifier New-VNVDTrafficRuleAction New-VNVDTrafficRule Remove-VNVDTrafficRule Set-VNVDTrafficRuleSet Set-VNVMHostNetworkAdapterVDUplink
 		IconUri = "https://avatars0.githubusercontent.com/u/10615837"
 		LicenseUri = "https://github.com/vNugglets/vNuggletsPSMod_vDNetworking/blob/master/License"
 		NestedModules = Write-Output GetItems.ps1 NewItems.ps1 RemoveItems.ps1 SetItems.ps1 "${strModuleName}_SupportingFunctions.ps1"
@@ -33,7 +33,7 @@ begin {
 		RequiredModules = "VMware.VimAutomation.Vds"
 		RootModule = "${strModuleName}_ModRoot.psm1"
 		ScriptsToProcess = "${strModuleName}_init.ps1", "${strModuleName}_ClassDefinition.ps1"
-		Tags = Write-Output vNugglets VMware vSphere PowerCLI VDPortGroup TrafficFiltering Filter Filtering TrafficMarking Mark Marking VDSwitch
+		Tags = Write-Output vNugglets VMware vSphere PowerCLI VDPortGroup TrafficFiltering Filter Filtering TrafficMarking Mark Marking VDSwitch Uplink VDUplink VMHostNetworkAdapater VMNIC
 		# Verbose = $true
 	} ## end hashtable
 
