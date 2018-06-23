@@ -1,5 +1,9 @@
 ### ChangeLog for vNugglets.VDNetworking PowerShell module
 
+#### v1.2.0, Jun 2018
+- \[enhancement] Added `Set-VNVMHostNetworkAdapterVDUplink` for setting the VDSwitch Uplink for a VMHost physical NIC ("VMNIC") on the VDSwitch of which the VMNIC is already a part
+- \[enhancement] Added `Get-VNVSwitchByVMHostNetworkAdapter` for getting the virtual switch (standard or distributed) with which the given VMHostNetworkAdapter physical NIC is associated, if any
+
 #### v1.1.0, Jan 2018
 - \[update] Added `-WhatIf` support to `New-VNVDTrafficRuleAction`, `New-VNVDTrafficRuleQualifier`
 - \[bugfix] `-Enabled` parameter on `Set-VNVDTrafficRuleSet` was not working as expected. Fixed

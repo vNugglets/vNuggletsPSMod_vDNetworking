@@ -1,10 +1,11 @@
-## Notes on Traffic Filtering and Marking code
+## Notes on vNugglets.VDNetworking PowerShell module
 
 
 ### Need to make:
 - Tests (partial, currently, written for interactive test, not fully automated)
 
 ### Maybe eventually add/update:
+- `Set-VNVMHostNetworkAdapterVDUplink`: add check that, if all specified VMHostNetworkAdapters are already associated with the given UplinkNames, take no action and return a Verbose message to that effect ("already in desired state"); approximate start/finish points for this feature are noted in comments in the code
 - `Copy-VNVDTrafficRule -Rule -Ruleset <rulesettowhichtocopy>`
 - `Set-VNVDTrafficRule` -- to update a rule, maybe? (like change qualifier/action?)
 - `New-VNVDTrafficRule`

@@ -202,3 +202,45 @@ function Get-VNVDTrafficRuleAction {
 		} ## end foreach-object
 	} ## end process
 } ## end function
+
+
+
+function Get-VNVSwitchByVMHostNetworkAdapter {
+<#	.Description
+	Get the virtual switch (standard or distributed) with which the given VMHostNetworkAdapter physical NIC is associated, if any.
+
+	.Example
+	Get-VMHost myVMHost0.dom.com | Get-VMHostNetworkAdapter -Name vmnic2 | Get-VNVSwitchByVMHostNetworkAdapter
+	Get the vSwitch with which VMNIC2 on myVMHost0.dom.com is associated
+
+	.Outputs
+	Virtual standard- or distributed switch with which given physical VMHost network adapter is associated, if any
+#>
+	[CmdletBinding()]
+	param(
+		## The VMHostNetworkAdapter (physical NIC) for which to get the vSwitch
+		[parameter(Mandatory=$true, ValueFromPipeline=$true)][VMware.VimAutomation.Types.Host.NIC.PhysicalNic[]]$VMHostNetworkAdapter
+	) ## end param
+
+	process {
+		$VMHostNetworkAdapter | Foreach-Object {
+			$oThisVMHostNetworkAdapter = $_
+			if ($oAssociatedVSwitch = $oThisVMHostNetworkAdapter.VMHost.ExtensionData.Config.Network.Vswitch, $oThisVMHostNetworkAdapter.VMHost.ExtensionData.Config.Network.ProxySwitch | Foreach-Object {$_} | Where-Object {$_.Pnic -contains $oThisVMHostNetworkAdapter.Id}) {
+				switch ($oAssociatedVSwitch) {
+					## vSS
+					{$_ -is [VMware.Vim.HostVirtualSwitch]} {
+						$oThisVMHostNetworkAdapter.VMHost | Get-VirtualSwitch -Standard -Name $oAssociatedVSwitch.Name
+						break
+					} ## end case
+					## vDSwitch
+					{$_ -is [VMware.Vim.HostProxySwitch]} {
+						$oThisVMHostNetworkAdapter.VMHost | Get-VDSwitch -Name $oAssociatedVSwitch.DvsName
+						break
+					} ## end case
+					default {Write-Warning "vSwitch not of expected type of either [VMware.Vim.HostVirtualSwitch] or [VMware.Vim.HostProxySwitch]. What kind of vSwitch is it? $_"}
+				} ## end switch
+			} ## end if
+			else {Write-Verbose "No vSwitch associated with VMNIC '$($oThisVMHostNetworkAdapter.Name)' found on VMHost '$($oThisVMHostNetworkAdapter.VMHost.Name)'"}
+		} ## end Foreach-Object
+	} ## end process
+} ## end fn

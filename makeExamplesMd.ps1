@@ -6,7 +6,11 @@ Get-Command -Module vNugglets.VDNetworking -PipelineVariable oThisCommand | Fore
 	$oHelp_ThisCommand = Get-Help -Full -Name $oThisCommand.Name
 	## make a string with the example description(s) and example code(s) for this cmdlet
 	$strExampleCodeBlock = ($oHelp_ThisCommand.examples.example | Foreach-Object {
-		"`n## {0}`n{1}" -f ($($_.remarks.Text | Where-Object {-not [System.String]::IsNullOrEmpty($_)}) -join "`n"), $_.code
+		## for this example, make a single string that is like:
+		#   ## example's comment line 0 here
+		#   ## example's comment line 1 here
+		#   example's actual code here
+		"`n{0}`n{1}" -f ($($_.remarks.Text | Where-Object {-not [System.String]::IsNullOrEmpty($_)} | Foreach-Object {$_.Split("`n")} | Foreach-Object {"## $_"}) -join "`n"), $_.code
 	}) -join "`n"
 	## make a string that has the cmdlet name and description followed by a code block with example(s)
 	"#### ``{0}``: {1}`n`n``````PowerShell{2}`n```````n" -f `
