@@ -19,7 +19,7 @@ begin {
 		Author = "Matt Boren (@mtboren)"
 		CompanyName = 'vNugglets for the VMware PowerCLI community'
 		Copyright = "MIT License"
-		Description = "Module with functions for managing VMware vSphere Virtual Distributed Networking components like traffic filtering and marking"
+		Description = "Module with functions for managing VMware vSphere Virtual Distributed Networking components like traffic filtering and marking, and vDUplink <--> VMNIC management"
 		# AliasesToExport = @()
 		FileList = Write-Output "${strModuleName}.psd1" "${strModuleName}_ModRoot.psm1" "en-US\about_${strModuleName}.help.txt" GetItems.ps1 NewItems.ps1 RemoveItems.ps1 SetItems.ps1 "${strModuleName}_SupportingFunctions.ps1" "${strModuleName}.format.ps1xml" "${strModuleName}_init.ps1" "${strModuleName}_ClassDefinition.ps1"
 		FormatsToProcess = "${strModuleName}.format.ps1xml"

@@ -5,6 +5,7 @@
 - Tests (partial, currently, written for interactive test, not fully automated)
 
 ### Maybe eventually add/update:
+- add `.Link` related links to each cmdlet to help show what cmdlets are related to which
 - `Set-VNVMHostNetworkAdapterVDUplink`: add check that, if all specified VMHostNetworkAdapters are already associated with the given UplinkNames, take no action and return a Verbose message to that effect ("already in desired state"); approximate start/finish points for this feature are noted in comments in the code
 - `Copy-VNVDTrafficRule -Rule -Ruleset <rulesettowhichtocopy>`
 - `Set-VNVDTrafficRule` -- to update a rule, maybe? (like change qualifier/action?)
@@ -13,7 +14,7 @@
 - `Set-VNVDTrafficRuleSet -Precedence -Rule`
     - to allow for the overwriting of the rules in the ruleset with just the new Rule(s) specified, and to allow setting of Precedence (though, may only ever be one TrafficRuleSet per vDPortgroup)
 - add `-RunAsync` to `New-VNVDTrafficRule`, `Remove-VNVDTrafficRule`, and any other cmdlet where it makes sense
-- add tidbit to `makeExamplesMD.ps1` that wraps long lines at ~105 characters or so, so that web presentation of the .md does not require reader to scroll long examples
+- add tidbit to `makeExamplesMD.ps1` that wraps long lines at about 105 characters or so, so that web presentation of the .md does not require reader to scroll long examples
 
 ### Done (to at least some extent -- some may have further features to implement):
 - `Get-VNVDTrafficFilterPolicyConfig`
