@@ -9,6 +9,7 @@
 					<TableColumnHeader></TableColumnHeader>
 					<TableColumnHeader></TableColumnHeader>
 					<TableColumnHeader></TableColumnHeader>
+					<TableColumnHeader></TableColumnHeader>
 				</TableHeaders>
 				<TableRowEntries>
 					<TableRowEntry>
@@ -16,6 +17,7 @@
 							<TableColumnItem><PropertyName>Name</PropertyName></TableColumnItem>
 							<TableColumnItem><PropertyName>TrafficRule</PropertyName></TableColumnItem>
 							<TableColumnItem><PropertyName>VDPortgroupView</PropertyName></TableColumnItem>
+							<TableColumnItem><PropertyName>VDPortView</PropertyName></TableColumnItem>
 						</TableColumnItems>
 					</TableRowEntry>
 				</TableRowEntries>

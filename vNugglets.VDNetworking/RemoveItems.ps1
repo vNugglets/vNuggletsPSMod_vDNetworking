@@ -31,16 +31,23 @@ function Remove-VNVDTrafficRule {
 
 	end {
 		## Group the TrafficRules by vDPortgroup (by grouping by MoRef per vCenter), then reconfig each vDPortgroup to remove the given Rule(s) for that vDPortgroup's sole TrafficRuleset all at once
-		$arrlVNVDTrafficRulesToRemove | Group-Object -Property @{e={$_.VDPortgroupView.MoRef}}, @{e={$_.VDPortgroupView.Client.ServiceUrl}} | Foreach-Object {
+		$arrlVNVDTrafficRulesToRemove | Group-Object -Property @{e = {$_.VDPortgroupView.MoRef}}, @{e = {$_.VDPortView.MoRef}}, @{e = {$_.VDPortgroupView.Client.ServiceUrl}} | Foreach-Object {
 			$oThisPSGroupInfoOfTrafficRules = $_
 			# The vDPortgroup with these TrafficRules (used in logging/reporting)
 			$oVDPG_TheseRules = $oThisPSGroupInfoOfTrafficRules.Group[0].VDPortgroupView
+			# The vDPort with these TrafficRules (used in logging/reporting)
+			$oVDP_TheseRules = $oThisPSGroupInfoOfTrafficRules.Group[0].VDPortView
 			# The VNVDTrafficRuleSet for these TrafficRules, to be used to remove the given TrafficRule(s)
 			$oVNVDTrafficRuleset_TheseRules = $oThisPSGroupInfoOfTrafficRules.Group[0].VNVDTrafficRuleSet
 			## the VMware.Vim.DvsTrafficRule objects to remove from the given TrafficRuleset
 			$arrDvsTrafficRulesToRemove = $oThisPSGroupInfoOfTrafficRules.Group.TrafficRule
 
-			$strMsgForShouldProcess_Target = "Traffic ruleset '{0}' on vDPortgroup '{1}'" -f $oVNVDTrafficRuleset_TheseRules.TrafficRuleset.Key, $oVDPG_TheseRules.Name
+			if ($null -ne $oVDPG_TheseRules) {
+				$strMsgForShouldProcess_Target = "Traffic ruleset '{0}' on vDPortgroup '{1}'" -f $oVNVDTrafficRuleset_TheseRules.TrafficRuleset.Key, $oVDPG_TheseRules.Name
+			} ## end if
+			else {
+				$strMsgForShouldProcess_Target = "Traffic ruleset '{0}' on vDPort '{1}'" -f $oVNVDTrafficRuleset_TheseRules.TrafficRuleset.Key, $oVDP_TheseRules.Key
+			} ## end else
 			$intNumDvsTrafficRulesToRemove = ($arrDvsTrafficRulesToRemove | Measure-Object).Count
 			$strMsgForShouldProcess_Action = "Remove {0} traffic rule{1} (of name{1} '{2}')" -f $intNumDvsTrafficRulesToRemove, $(if ($intNumDvsTrafficRulesToRemove -ne 1) {"s"}), ($arrDvsTrafficRulesToRemove.Description -join ", ")
 			if ($PSCmdlet.ShouldProcess($strMsgForShouldProcess_Target, $strMsgForShouldProcess_Action)) {

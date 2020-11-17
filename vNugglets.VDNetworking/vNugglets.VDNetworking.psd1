@@ -112,7 +112,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = 'vNugglets','VMware','vSphere','PowerCLI','VDPortGroup','TrafficFiltering','Filter','Filtering','TrafficMarking','Mark','Marking','VDSwitch','Uplink','VDUplink','VMHostNetworkAdapater','VMNIC'
+        Tags = 'vNugglets','VMware','vSphere','PowerCLI','VDPortGroup','VDPort','TrafficFiltering','Filter','Filtering','TrafficMarking','Mark','Marking','VDSwitch','Uplink','VDUplink','VMHostNetworkAdapater','VMNIC'
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/vNugglets/vNuggletsPSMod_vDNetworking/blob/master/License'

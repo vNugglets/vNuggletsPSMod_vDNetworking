@@ -20,20 +20,40 @@ function Set-VNVDTrafficRuleSet {
 		[parameter(Mandatory=$true, ValueFromPipeline=$true)][VNVDTrafficRuleSet[]]$TrafficRuleSet,
 
 		## Switch: Enable the TrafficRuleSet(s)?  And, use "-Enabled:$false" to disable TrafficRuleSet(s)
-		[Switch]$Enabled
+		[Switch]$Enabled,
+
+		## Switch: Override the TrafficRuleSet(s) from PortGroup?  And, use "-Override:$false" to inherited TrafficRuleSet(s)
+		[Switch]$Override
 	) ## end param
 
 	process {
 		$TrafficRuleSet | Foreach-Object {
 			$oThisVNVDTrafficRuleset = $_
-			$strMsgForShouldProcess_Target = "Traffic ruleset '{0}' on vDPG '{1}'" -f $oThisVNVDTrafficRuleset.TrafficRuleset.Key, $oThisVNVDTrafficRuleset.VDPortgroupView.Name
-			$strMsgForShouldProcess_Action = "{0} ruleset" -f $(if ($Enabled) {"Enable"} else {"Disable"})
-			if ($PSCmdlet.ShouldProcess($strMsgForShouldProcess_Target, $strMsgForShouldProcess_Action)) {
-				try {
-					## use the helper function to add this new TrafficRule to the TrafficRuleSet Rules array
-					Set-VNVDTrafficRuleset_helper -TrafficRuleSet $oThisVNVDTrafficRuleset -Enabled:$Enabled
-				} ## end try
-				catch {Throw $_}
+			if ($null -ne $oThisVNVDTrafficRuleset.VDPortgroupView) {
+				$strMsgForShouldProcess_Target = "Traffic ruleset '{0}' on vDPG '{1}'" -f $oThisVNVDTrafficRuleset.TrafficRuleset.Key, $oThisVNVDTrafficRuleset.VDPortgroupView.Name
+			} ## end if
+			else {
+				$strMsgForShouldProcess_Target = "Traffic ruleset '{0}' on vDP '{1}'" -f $oThisVNVDTrafficRuleset.TrafficRuleset.Key, $oThisVNVDTrafficRuleset.VDPortView.Key
+			} ## end else
+			if ($PSBoundParameters.ContainsKey("Override")) {
+				$strMsgForShouldProcess_Action = "{0} ruleset" -f $(if ($Override) {"Override"} else {"UnOverride"})
+				if ($PSCmdlet.ShouldProcess($strMsgForShouldProcess_Target, $strMsgForShouldProcess_Action)) {
+					try {
+						## use the helper function to add this new TrafficRule to the TrafficRuleSet Rules array
+						Set-VNVDTrafficRuleset_helper -TrafficRuleSet $oThisVNVDTrafficRuleset -Override:$Override
+					} ## end try
+					catch {Throw $_}
+				} ## end if
+			} ## end if
+			if ($PSBoundParameters.ContainsKey("Enabled")) {
+				$strMsgForShouldProcess_Action = "{0} ruleset" -f $(if ($Enabled) {"Enable"} else {"Disable"})
+				if ($PSCmdlet.ShouldProcess($strMsgForShouldProcess_Target, $strMsgForShouldProcess_Action)) {
+					try {
+						## use the helper function to add this new TrafficRule to the TrafficRuleSet Rules array
+						Set-VNVDTrafficRuleset_helper -TrafficRuleSet $oThisVNVDTrafficRuleset -Enabled:$Enabled
+					} ## end try
+					catch {Throw $_}
+				} ## end if
 			} ## end if
 		} ## end foreach-object
 	} ## end process
