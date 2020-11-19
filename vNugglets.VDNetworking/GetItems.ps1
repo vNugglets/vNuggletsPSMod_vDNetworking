@@ -22,7 +22,13 @@ function Get-VNVDTrafficFilterPolicyConfig {
 		[parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'ByVDPort')][VMware.VimAutomation.Vds.Types.V1.VDPort[]]$VDPort,
 
 		## The View object for the virtual distributed port for which to get the traffic filtering and marking policy configuration
-		[parameter(Mandatory=$true, ValueFromPipeline=$true, ParameterSetName="ByVDPortView")][VMware.Vim.DistributedVirtualPort[]]$VDPortView
+		[parameter(Mandatory=$true, ValueFromPipeline=$true, ParameterSetName="ByVDPortView")][VMware.Vim.DistributedVirtualPort[]]$VDPortView,
+
+		## The VM nic for which to get the traffic filtering and marking policy configuration
+		[parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'ByNetworkAdapter')][VMware.VimAutomation.ViCore.Types.V1.VirtualDevice.NetworkAdapter[]]$NetworkAdapter,
+
+		## The VM for which to get the traffic filtering and marking policy configuration
+		[parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'ByVM')][VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine[]]$VM
 	) ## end param
 
 	process {
@@ -45,6 +51,20 @@ function Get-VNVDTrafficFilterPolicyConfig {
 					## update the ViewData for this vDP, just to be sure that all is current
 					## UpdateViewData not exist on port, so we have to take the long way
 					$oThisVDPView = (Get-VDPort -VDPortgroup (Get-VDPortgroup -Id "DistributedVirtualPortgroup-$($_.PortgroupKey)") -Key $_.Key).ExtensionData
+					$oThisVDPView.Config.Setting.FilterPolicy.FilterConfig | ForEach-Object {
+						New-Object -Type VNVDTrafficFilterPolicyConfig -Property @{
+							TrafficFilterPolicyConfig = $_
+							VDPortView = $oThisVDPView
+						} ## end new-object
+					} ## end foreach-object
+				} ## end foreach-object
+			} ## end case
+
+			{"ByNetworkAdapter", "ByVM" -contains $_} {
+				## get the NetworkAdapter objects over which to iterate (either the the nics of the VM)
+				$(if ($PSCmdlet.ParameterSetName -eq "ByVM") {$VM | Foreach-Object {$_ | Get-NetworkAdapter}} else {$NetworkAdapter}) | Foreach-Object {
+					## get the vDPort View of the VM nic
+					$oThisVDPView = (Get-VDPort -VDPortgroup (Get-VDPortgroup -Id "DistributedVirtualPortgroup-$($_.ExtensionData.Backing.Port.PortgroupKey)") -Key $_.ExtensionData.Backing.Port.PortKey).ExtensionData
 					$oThisVDPView.Config.Setting.FilterPolicy.FilterConfig | ForEach-Object {
 						New-Object -Type VNVDTrafficFilterPolicyConfig -Property @{
 							TrafficFilterPolicyConfig = $_
@@ -90,7 +110,13 @@ function Get-VNVDTrafficRuleSet {
 		[parameter(Mandatory=$true, ValueFromPipeline=$true, ParameterSetName="ByVDPort")][VMware.VimAutomation.Vds.Types.V1.VDPort[]]$VDPort,
 
 		## The View object for the virtual distributed port for which to get the traffic ruleset
-		[parameter(Mandatory=$true, ValueFromPipeline=$true, ParameterSetName="ByVDPortView")][VMware.Vim.DistributedVirtualPort[]]$VDPortView
+		[parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = "ByVDPortView")][VMware.Vim.DistributedVirtualPort[]]$VDPortView,
+
+		## The VM nic for which to get the traffic filtering and marking policy configuration
+		[parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'ByNetworkAdapter')][VMware.VimAutomation.ViCore.Types.V1.VirtualDevice.NetworkAdapter[]]$NetworkAdapter,
+
+		## The VM for which to get the traffic filtering and marking policy configuration
+		[parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'ByVM')][VMware.VimAutomation.ViCore.Types.V1.Inventory.VirtualMachine[]]$VM
 	) ## end param
 
 	process {
@@ -100,6 +126,8 @@ function Get-VNVDTrafficRuleSet {
 			"ByVDPortGroupView" { $TrafficFilterPolicyConfig = Get-VNVDTrafficFilterPolicyConfig -VDPortgroupView $VDPortgroupView }
 			"ByVDPort" { $TrafficFilterPolicyConfig = Get-VNVDTrafficFilterPolicyConfig -VDPort $VDPort }
 			"ByVDPortView" { $TrafficFilterPolicyConfig = Get-VNVDTrafficFilterPolicyConfig -VDPortView $VDPortView }
+			"ByNetworkAdapter" { $TrafficFilterPolicyConfig = Get-VNVDTrafficFilterPolicyConfig -NetworkAdapter $NetworkAdapter }
+			"ByVM" { $TrafficFilterPolicyConfig = Get-VNVDTrafficFilterPolicyConfig -VM $VM }
 		} ## end switch
 
 		$TrafficFilterPolicyConfig | Foreach-Object {
