@@ -353,6 +353,9 @@ function New-VNVDTrafficRule {
 		## always add Direction key/value is in the hsh (so that, if not specified by user, it takes default value)
 		$hshParamForNewRuleObject = @{direction = $Direction}
 
+		## Add Sequence in Rules to make it visable in WebUI, when add more then 1 rule
+		$hshParamForNewRuleObject = @{sequence = ($TrafficRuleSet.TrafficRuleset.Rules.Sequence | Sort-Object | Select-Object -Last 1) + 10}
+
 		## for any of the other bound parameters that are for specific properties of a new Traffic Rule (i.e., that are not "common" PowerShell parameters like -Verbose or -PipelineVariable)
 		$PSBoundParameters.Keys | Where-Object {$hshParameterNameToNewObjectPropertyNameMapping.ContainsKey($_)} | Foreach-Object {
 			## get the new API object property name to use from the NameMapping hashtable, and set the value to that of the given bound parameter
