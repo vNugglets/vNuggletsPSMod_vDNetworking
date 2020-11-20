@@ -15,6 +15,9 @@ Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficFilt
 
 ## Get traffic rules whose name is like "myTestRule*"
 Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficFilterPolicyConfig | Get-VNVDTrafficRuleSet | Get-VNVDTrafficRule myTestRule*
+
+## Get the traffic rules from the TrafficeRuleset, which was gotten from the vDP's TrafficFilterPolicyConfig
+Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-Port 123 | Get-VNVDTrafficFilterPolicyConfig | Get-VNVDTrafficRuleSet | Get-VNVDTrafficRule
 ```
 
 #### `Get-VNVDTrafficRuleAction`: Get the VDTrafficRule Action for the TrafficRule from the given VDTrafficFilterPolicy configuration from VDPortgroup(s)
@@ -105,6 +108,16 @@ Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficFilt
 
 ## Get the traffic ruleset from the given vDPG and Disable it
 Get-VDSwitch -Name myVDSw0 | Get-VDPortGroup -Name myVDPG0 | Get-VNVDTrafficRuleSet | Set-VNVDTrafficRuleSet -Enabled:$false
+```
+
+#### `New-VNVDTrafficRule`: Make new Traffic Rule and add it to the given Traffic Ruleset of a vDPort traffic filter policy
+
+```PowerShell
+## Override to the given TrafficRuleset from the given vDPort. Then you can configure it.
+Get-VDPortGroup myVDPG0 | Get-Port 123 | Get-VNVDTrafficRuleSet | Set-VNVDTrafficRuleSet -Override:$true
+
+## Create a new Traffic Rule that has two Qualifiers and add it to the given TrafficRuleset from the given vDPortgroup. The new Traffic Rule adds a DSCP tag with value 8 to VM traffic from given source IP
+Get-VDPortGroup myVDPG0 | Get-Port 123 | Get-VNVDTrafficRuleSet | New-VNVDTrafficRule -Name "Apply DSCP tag to VM traffic from given address" -Action (New-VNVDTrafficRuleAction -DscpTag 8) -Qualifier (New-VNVDTrafficRuleQualifier -SystemTrafficType virtualMachine), (New-VNVDTrafficRuleQualifier -SourceIpAddress 172.16.1.2) -Direction outgoingPackets
 ```
 
 #### `Set-VNVMHostNetworkAdapterVDUplink`: Set the VDSwitch Uplink for a VMHost physical NIC ("VMNIC") on the VDSwitch of which the VMNIC is already a part

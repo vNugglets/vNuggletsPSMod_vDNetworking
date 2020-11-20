@@ -11,12 +11,12 @@ Contents:
 This PowerShell module provides functionality to automate the management of VMware vSphere virtual distributed networking items for which VMware PowerCLI does not already provide support.  For example, for the reporting on-, creation of-, and removal of traffic filtering and marking rules at the vDPortgroup level.  Another capability:  managing the VDUplink of which a VMHost VMNIC is a part.
 
 Some of the functionality provided by the cmdlets in this module:
-- Get VDPortgroup traffic policy
+- Get VDPortgroup and VDPort traffic policy
 - Get traffic policy rules
 - Get traffic policy rule qualifiers
 - Create traffic policy rule qualifiers, for use in creation of new policy rules
-- Create new traffic rules for the ruleset for the given vDPortgroup
-- Remove given traffic rule(s) from a vDPortgroup
+- Create new traffic rules for the ruleset for the given vDPortgroup or vDPort
+- Remove given traffic rule(s) from a vDPortgroup or vDPort
 - Set the VDSwitch Uplink for a VMHost physical NIC ("VMNIC") on the VDSwitch of which the VMNIC is already a part
 
 <a id="quickStart"></a>

@@ -33,7 +33,7 @@ begin {
 		RequiredModules = "VMware.VimAutomation.Vds"
 		RootModule = "${strModuleName}_ModRoot.psm1"
 		ScriptsToProcess = "${strModuleName}_init.ps1", "${strModuleName}_ClassDefinition.ps1"
-		Tags = Write-Output vNugglets VMware vSphere PowerCLI VDPortGroup TrafficFiltering Filter Filtering TrafficMarking Mark Marking VDSwitch Uplink VDUplink VMHostNetworkAdapater VMNIC
+		Tags = Write-Output vNugglets VMware vSphere PowerCLI VDPortGroup VDPort TrafficFiltering Filter Filtering TrafficMarking Mark Marking VDSwitch Uplink VDUplink VMHostNetworkAdapater VMNIC
 		# Verbose = $true
 	} ## end hashtable
 

@@ -8,7 +8,7 @@ SHORT DESCRIPTION
 LONG DESCRIPTION
     The cmdlets in this module focus on VMware vSphere Virtual Distributed
     networking infrastructure.  Mainly this is about traffic filtering rules
-    and traffic marking configurations for vDPortgroups
+    and traffic marking configurations for vDPortgroups and vDPorts
 
 EXAMPLES
     All of the cmdlets in this module have proper comment-based help.  Discover
