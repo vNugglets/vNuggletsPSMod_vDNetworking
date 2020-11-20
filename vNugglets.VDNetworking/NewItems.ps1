@@ -354,7 +354,7 @@ function New-VNVDTrafficRule {
 		$hshParamForNewRuleObject = @{direction = $Direction}
 
 		## Add Sequence in Rules to make it visable in WebUI, when add more then 1 rule
-		$hshParamForNewRuleObject = @{sequence = ($TrafficRuleSet.TrafficRuleset.Rules.Sequence | Sort-Object | Select-Object -Last 1) + 10}
+		$hshParamForNewRuleObject += @{sequence = ($TrafficRuleSet.TrafficRuleset.Rules.Sequence | Sort-Object | Select-Object -Last 1) + 10}
 
 		## for any of the other bound parameters that are for specific properties of a new Traffic Rule (i.e., that are not "common" PowerShell parameters like -Verbose or -PipelineVariable)
 		$PSBoundParameters.Keys | Where-Object {$hshParameterNameToNewObjectPropertyNameMapping.ContainsKey($_)} | Foreach-Object {
